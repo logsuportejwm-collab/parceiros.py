@@ -117,6 +117,21 @@ with st.sidebar:
 
     st.markdown("---")
 
+    # instrção
+    with st.expander("📘 IST(Instrução de Trabalho)"):
+        if os.path.exists("QR Code.png"):
+            st.image("QR Code.png", width=90)
+
+        else:
+            st.error("❌ Arquivo 'Manual.png' não encontrado!")
+    st.button("🧹 LIMPAR TODOS OS FILTROS", on_click=clear_all_filters)
+    st.markdown("### 🔗 Links importantes")
+    st.markdown("""
+        - 🌐 **Site JWM** → [Acessar](https://jwmlogistica.com.br)
+        - 🗺️ **Google Maps** → [Abrir](https://www.google.com/maps)
+        - 📊 **Power BI** → [Dashboard](https://app.powerbi.com/links/MSe9_-szX0?ctid=c8335dcc-510d-4853-a36f-b12b7f4be009&pbi_source=linkShare)
+        - 📦🚚 **Dimensionamento Veículo** → [App](https://dimensionamento-de-ve-culos---jwm-dvxn4ufxfmnmyanmv3ohte.streamlit.app/)
+    
     # -----------------------------------------
     # MODELO DE IMPORTAÇÃO
     # -----------------------------------------

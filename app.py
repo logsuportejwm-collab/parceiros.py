@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import unicodedata
 import mysql.connector
-import io
 import os
 
 # =========================================================
@@ -13,26 +12,22 @@ st.set_page_config(
     layout="wide"
 )
 
-st.markdown(
-    """
-    <style>
-    .stApp {
-        background: linear-gradient(to right,#000000, #09203f, #517fa4);
-        background-attachment: fixed;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+st.markdown("""
+<style>
+.stApp {
+    background: linear-gradient(to right,#000000, #09203f, #517fa4);
+    background-attachment: fixed;
+}
+</style>
+""", unsafe_allow_html=True)
 
 # =========================================================
-# HEADER VISUAL
+# HEADER
 # =========================================================
 st.image(
     "https://jwmlogistica.com.br/wp-content/uploads/2022/06/cropped-logo-jwm.png",
     width=420
 )
-
 st.markdown("## **Gestão de Parceiros 🚛💼🌎**")
 st.write("**Motoristas Terceiros**")
 st.markdown("---")
@@ -43,12 +38,9 @@ st.markdown("---")
 def norm(x):
     if x is None:
         return ""
-    return (
-        unicodedata.normalize("NFKD", str(x).strip())
-        .encode("ascii", "ignore")
-        .decode()
-        .upper()
-    )
+    return unicodedata.normalize(
+        "NFKD", str(x).strip()
+    ).encode("ascii", "ignore").decode().upper()
 
 def get_connection():
     return mysql.connector.connect(
@@ -88,20 +80,22 @@ def carregar_df():
     df.columns = [norm(c) for c in df.columns]
     return df.fillna("")
 
+df_base = carregar_df()
+
 # =========================================================
 # FILTROS
 # =========================================================
 filtros = [
-    ("PLACA","Placa"),
-    ("INDICACAO","Indicação"),
-    ("RASTREADOR","Rastreador"),
-    ("ESTADO","Estado"),
-    ("CIDADE","Cidade"),
-    ("TIPO DE VEICULO","Tipo Veículo"),
-    ("ANO","Ano"),
-    ("MOTORISTA","Motorista"),
-    ("TAGS","Tags"),
-    ("USUARIO","Usuário")
+    ("PLACA", "Placa"),
+    ("INDICACAO", "Indicação"),
+    ("RASTREADOR", "Rastreador"),
+    ("ESTADO", "Estado"),
+    ("CIDADE", "Cidade"),
+    ("TIPO DE VEICULO", "Tipo Veículo"),
+    ("ANO", "Ano"),
+    ("MOTORISTA", "Motorista"),
+    ("TAGS", "Tags"),
+    ("USUARIO", "Usuário")
 ]
 
 for col, _ in filtros:
@@ -122,20 +116,14 @@ def filtrar(df):
 # =========================================================
 # SIDEBAR
 # =========================================================
-df_base = carregar_df()
-
 with st.sidebar:
     st.title("🎛️ Filtros")
-
     colA, colB = st.columns(2)
+
     for i, (col, label) in enumerate(filtros):
         opcoes = sorted([v for v in df_base[col].unique() if v])
-        if i % 2 == 0:
-            with colA:
-                st.multiselect(label, opcoes, key=f"f_{col}")
-        else:
-            with colB:
-                st.multiselect(label, opcoes, key=f"f_{col}")
+        with (colA if i % 2 == 0 else colB):
+            st.multiselect(label, opcoes, key=f"f_{col}")
 
     st.markdown("---")
     st.button("🧹 LIMPAR TODOS OS FILTROS", on_click=clear_all_filters)
@@ -158,7 +146,6 @@ with st.sidebar:
 # IMPORTAÇÃO
 # =========================================================
 st.markdown("## 📤 Importar Planilha")
-
 uploaded = st.file_uploader(
     "Selecione o arquivo (.xls ou .xlsx)",
     type=["xls", "xlsx"]
@@ -167,7 +154,6 @@ uploaded = st.file_uploader(
 if uploaded:
     df_import = pd.read_excel(uploaded).fillna("")
     df_import.columns = [norm(c) for c in df_import.columns]
-    st.session_state["df_import"] = df_import
 
     st.info(f"📄 {len(df_import)} registros prontos para importação")
     st.dataframe(df_import, use_container_width=True)
@@ -184,30 +170,13 @@ if uploaded:
                      telefone, cidade, estado, rastreador,
                      curso_mop, data_cadastro, indicacao, tags, usuario)
                     VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
-                """, (
-                    norm(row.get("PLACA")),
-                    norm(row.get("MARCA")),
-                    norm(row.get("MODELO")),
-                    norm(row.get("ANO")),
-                    norm(row.get("TIPO DE VEICULO")),
-                    norm(row.get("MOTORISTA")),
-                    norm(row.get("TELEFONE")),
-                    norm(row.get("CIDADE")),
-                    norm(row.get("ESTADO")),
-                    norm(row.get("RASTREADOR")),
-                    norm(row.get("CURSO MOP")),
-                    norm(row.get("DATA DO CADASTRO")),
-                    norm(row.get("INDICACAO")),
-                    norm(row.get("TAGS")),
-                    norm(row.get("USUARIO")),
-                ))
+                """, tuple(norm(row.get(c)) for c in df_import.columns))
 
             conn.commit()
             cursor.close()
             conn.close()
 
             st.success("✔ Importação realizada com sucesso!")
-            st.session_state.pop("df_import", None)
             st.cache_data.clear()
             st.rerun()
 
@@ -226,17 +195,18 @@ st.dataframe(filtrar(df_base), use_container_width=True)
 # FUNÇÃO LIMPAR FORMULÁRIO
 # =========================================================
 def limpar_formulario():
-    campos = [
+    for k in [
         "placa","marca","modelo","tipo","ano","motorista",
         "telefone","cidade","estado","data","usuario"
-    ]
-    for c in campos:
-        st.session_state[c] = ""
+    ]:
+        st.session_state[k] = ""
 
-    st.session_state["curso"] = "SIM"
-    st.session_state["indicacao"] = "SIM"
-    st.session_state["rastreador"] = "SIM"
-    st.session_state["tags"] = "CONECT CAR"
+    st.session_state.update({
+        "curso": "SIM",
+        "indicacao": "SIM",
+        "rastreador": "SIM",
+        "tags": "CONECT CAR"
+    })
 
 # =========================================================
 # CADASTRO MANUAL
@@ -255,27 +225,27 @@ with st.form("cadastro"):
     with c2:
         ano = st.text_input("Ano", key="ano")
         motorista = st.text_input("Motorista", key="motorista")
-        curso = st.selectbox("Curso MOP", ["SIM", "NAO"], key="curso")
-        indicacao = st.selectbox("Indicação", ["SIM", "NAO"], key="indicacao")
+        curso = st.selectbox("Curso MOP", ["SIM","NAO"], key="curso")
+        indicacao = st.selectbox("Indicação", ["SIM","NAO"], key="indicacao")
 
     with c3:
         telefone = st.text_input("Telefone", key="telefone")
         cidade = st.text_input("Cidade", key="cidade")
         estado = st.text_input("Estado", key="estado")
-        rastreador = st.selectbox("Rastreador", ["SIM", "NAO"], key="rastreador")
+        rastreador = st.selectbox("Rastreador", ["SIM","NAO"], key="rastreador")
 
     with c4:
         data = st.text_input("Data do cadastro", key="data")
         tags = st.selectbox(
             "Tags",
-            ["CONECT CAR", "SEM PARAR", "VELOE", "MOVE MAIS"],
+            ["CONECT CAR","SEM PARAR","VELOE","MOVE MAIS"],
             key="tags"
         )
         usuario = st.text_input("Usuário", key="usuario")
 
-    col_btn1, col_btn2 = st.columns(2)
-    salvar = col_btn1.form_submit_button("💾 SALVAR")
-    limpar = col_btn2.form_submit_button("🧹 LIMPAR CAMPOS")
+    col1, col2 = st.columns(2)
+    salvar = col1.form_submit_button("💾 SALVAR")
+    limpar = col2.form_submit_button("🧹 LIMPAR CAMPOS")
 
 if limpar:
     limpar_formulario()

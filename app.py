@@ -8,14 +8,18 @@ import io
 # CONFIGURAÇÃO
 # ---------------------------------------------------------
 st.set_page_config(page_title="Parceiros JWM", layout="wide")
-st.markdown("""
-<style>
-.stApp {
-    background: linear-gradient(to right,#000000, #09203f, #517fa4);
-    background-attachment: fixed;
-}
-</style>
-""", unsafe_allow_html=True)
+st.markdown(
+    """
+    <style>
+    .stApp {
+        background: linear-gradient(to right,#000000, #09203f, #517fa4);
+        background-attachment: fixed;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 
 # ---------------------------------------------------------
 # NORMALIZADOR

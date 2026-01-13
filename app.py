@@ -2,12 +2,12 @@ import streamlit as st
 import pandas as pd
 import unicodedata
 import mysql.connector
+import io
 
 # ---------------------------------------------------------
 # CONFIGURAÇÃO
 # ---------------------------------------------------------
 st.set_page_config(page_title="Parceiros JWM", layout="wide")
-
 st.markdown("""
 <style>
 .stApp {
@@ -78,34 +78,24 @@ def carregar_df():
 filtros = [
     ("PLACA", "Placa"),
     ("INDICACAO", "Indicação"),
-    ("RASTREADOR", "Rastreador"),
-    ("ESTADO", "Estado"),
-    ("CIDADE", "Cidade"),
-    ("TIPO DE VEICULO", "Tipo Veículo"),
-    ("ANO", "Ano"),
-    ("MOTORISTA", "Motorista"),
-    ("TELEFONE", "Telefone"),
-    ("CURSO MOP", "Curso MOP"),
-    ("TAGS", "Tags"),
-    ("USUARIO", "Usuário"),
+    ("RASTREADOR","Rastreador"),
+    ("ESTADO","Estado"),
+    ("CIDADE","Cidade"),
+    ("TIPO DE VEICULO","Tipo Veículo"),
+    ("ANO","Ano"),
+    ("MOTORISTA","Motorista"),
+    ("TAGS","Tags"),
+    ("USUARIO","Usuário")
 ]
 
-for col, _ in filtros:
+for col,_ in filtros:
     st.session_state.setdefault(f"f_{col}", [])
-
-def clear_filter(col):
-    st.session_state[f"f_{col}"] = []
-
-def clear_all_filters():
-    for col, _ in filtros:
-        st.session_state[f"f_{col}"] = []
 
 def filtrar(df):
     temp = df.copy()
-    for col, _ in filtros:
-        vals = st.session_state[f"f_{col}"]
-        if vals:
-            temp = temp[temp[col].isin(vals)]
+    for col,_ in filtros:
+        if st.session_state[f"f_{col}"]:
+            temp = temp[temp[col].isin(st.session_state[f"f_{col}"])]
     return temp
 
 # ---------------------------------------------------------
@@ -121,45 +111,94 @@ df_base = carregar_df()
 
 with st.sidebar:
     st.title("Filtros")
+    for col, label in filtros:
+        ops = sorted([v for v in df_base[col].unique() if v])
+        st.multiselect(label, ops, key=f"f_{col}")
 
-    with st.expander("🎛️ Filtros Inteligentes"):
-        for i in range(0, len(filtros), 2):
-            colA, colB = st.columns(2)
+    st.markdown("---")
 
-            fcol1, flabel1 = filtros[i]
-            with colA:
-                ops = sorted([v for v in df_base[fcol1].unique() if v])
-                st.multiselect(flabel1, ops, key=f"f_{fcol1}")
-                st.button("❌", on_click=clear_filter, args=(fcol1,), key=f"c_{fcol1}")
+    # -----------------------------------------------------
+    # DOWNLOAD MODELO DE IMPORTAÇÃO
+    # -----------------------------------------------------
+    modelo = pd.DataFrame(columns=[
+        "PLACA","MARCA","MODELO","ANO","TIPO DE VEICULO","MOTORISTA",
+        "TELEFONE","CIDADE","ESTADO","RASTREADOR","CURSO MOP",
+        "DATA DO CADASTRO","INDICACAO","TAGS","USUARIO"
+    ])
 
-            if i + 1 < len(filtros):
-                fcol2, flabel2 = filtros[i + 1]
-                with colB:
-                    ops2 = sorted([v for v in df_base[fcol2].unique() if v])
-                    st.multiselect(flabel2, ops2, key=f"f_{fcol2}")
-                    st.button("❌", on_click=clear_filter, args=(fcol2,), key=f"c_{fcol2}")
+    buffer = io.BytesIO()
+    modelo.to_excel(buffer, index=False)
+    buffer.seek(0)
 
-    st.button("🧹 LIMPAR TODOS", on_click=clear_all_filters)
+    st.download_button(
+        "⬇️ Baixar modelo de importação",
+        buffer,
+        file_name="modelo_importacao_parceiros.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+
+    # -----------------------------------------------------
+    # IMPORTAÇÃO DE PLANILHA
+    # -----------------------------------------------------
+    st.markdown("### 📥 Importar Planilha")
+    arquivo = st.file_uploader("Selecione o arquivo (.xls ou .xlsx)", type=["xls","xlsx"])
+
+    if arquivo:
+        try:
+            df_import = pd.read_excel(arquivo).fillna("")
+            df_import.columns = [norm(c) for c in df_import.columns]
+
+            conn = get_connection()
+            cursor = conn.cursor()
+
+            sql = """
+                INSERT INTO parceiros_jwm
+                (placa, marca, modelo, ano, tipo_veiculo, motorista,
+                 telefone, cidade, estado, rastreador,
+                 curso_mop, data_cadastro, indicacao, tags, usuario)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+            """
+
+            for _, row in df_import.iterrows():
+                cursor.execute(sql, (
+                    norm(row["PLACA"]),
+                    norm(row["MARCA"]),
+                    norm(row["MODELO"]),
+                    norm(row["ANO"]),
+                    norm(row["TIPO DE VEICULO"]),
+                    norm(row["MOTORISTA"]),
+                    norm(row["TELEFONE"]),
+                    norm(row["CIDADE"]),
+                    norm(row["ESTADO"]),
+                    norm(row["RASTREADOR"]),
+                    norm(row["CURSO MOP"]),
+                    norm(row["DATA DO CADASTRO"]),
+                    norm(row["INDICACAO"]),
+                    norm(row["TAGS"]),
+                    norm(row["USUARIO"]),
+                ))
+
+            conn.commit()
+            cursor.close()
+            conn.close()
+
+            st.success("✔ Importação realizada com sucesso!")
+            st.cache_data.clear()
+            st.rerun()
+
+        except Exception as e:
+            st.error(f"❌ Erro na importação: {e}")
 
 # ---------------------------------------------------------
 # TABELA
 # ---------------------------------------------------------
-df_filtrado = filtrar(df_base).drop(columns=["INDICACAO"], errors="ignore")
 st.subheader("📋 Dados filtrados")
-st.dataframe(df_filtrado, use_container_width=True)
+st.dataframe(filtrar(df_base), use_container_width=True)
 
 # ---------------------------------------------------------
 # FORMULÁRIO
 # ---------------------------------------------------------
-st.markdown("## 📝 Cadastro de Parceiro / Motorista")
-
-OPCOES_TAGS = [
-    "CONECT CAR",
-    "SEM PARAR",
-    "VELOE",
-    "MOVE MAIS"
-]
-
+st.markdown("## 📝 Cadastro Manual")
 with st.form("cadastro"):
     col1, col2, col3, col4 = st.columns(4)
 
@@ -172,57 +211,44 @@ with st.form("cadastro"):
     with col2:
         ano = st.text_input("Ano")
         motorista = st.text_input("Motorista")
-        curso = st.selectbox("Curso MOP", ["SIM", "NAO"])
-        indicacao = st.selectbox("Indicação", ["SIM", "NAO"])
+        curso = st.selectbox("Curso MOP", ["SIM","NAO"])
+        indicacao = st.selectbox("Indicação", ["SIM","NAO"])
 
     with col3:
         telefone = st.text_input("Telefone")
         cidade = st.text_input("Cidade")
         estado = st.text_input("Estado")
-        rastreador = st.selectbox("Rastreador", ["SIM", "NAO"])
+        rastreador = st.selectbox("Rastreador", ["SIM","NAO"])
 
     with col4:
         data = st.text_input("Data do cadastro")
-        tags = st.selectbox("Tags", OPCOES_TAGS)   # ✅ MENU SUSPENSO
-        usuario = st.text_input("Usuário")         # ✅ CAMPO LIVRE
+        tags = st.selectbox("Tags", ["CONECT CAR","SEM PARAR","VELOE","MOVE MAIS"])
+        usuario = st.text_input("Usuário")
 
     send = st.form_submit_button("💾 SALVAR")
 
 # ---------------------------------------------------------
-# SALVAR NO MYSQL
+# SALVAR MANUAL
 # ---------------------------------------------------------
 if send:
     try:
         conn = get_connection()
         cursor = conn.cursor()
 
-        sql = """
+        cursor.execute("""
             INSERT INTO parceiros_jwm
             (placa, marca, modelo, ano, tipo_veiculo, motorista,
              telefone, cidade, estado, rastreador,
              curso_mop, data_cadastro, indicacao, tags, usuario)
             VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
-        """
+        """, (
+            norm(placa), norm(marca), norm(modelo), norm(ano),
+            norm(tipo), norm(motorista), norm(telefone),
+            norm(cidade), norm(estado), norm(rastreador),
+            norm(curso), norm(data), norm(indicacao),
+            norm(tags), norm(usuario)
+        ))
 
-        values = (
-            norm(placa),
-            norm(marca),
-            norm(modelo),
-            norm(ano),
-            norm(tipo),
-            norm(motorista),
-            norm(telefone),
-            norm(cidade),
-            norm(estado),
-            norm(rastreador),
-            norm(curso),
-            norm(data),
-            norm(indicacao),
-            norm(tags),
-            norm(usuario)
-        )
-
-        cursor.execute(sql, values)
         conn.commit()
         cursor.close()
         conn.close()

@@ -8,6 +8,7 @@ import io
 # CONFIGURAÇÃO
 # ---------------------------------------------------------
 st.set_page_config(page_title="Parceiros JWM", layout="wide")
+
 st.markdown("""
 <style>
 .stApp {
@@ -132,9 +133,7 @@ with st.sidebar:
     ])
 
     buffer = io.BytesIO()
-    with pd.ExcelWriter(buffer, engine="xlsxwriter") as writer:
-        modelo.to_excel(writer, index=False, sheet_name="MODELO")
-
+    modelo.to_excel(buffer, index=False)
     buffer.seek(0)
 
     st.download_button(

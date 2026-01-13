@@ -179,31 +179,33 @@ with st.sidebar:
                 cursor = conn.cursor()
 
                 sql = """
-                    INSERT INTO parceiros_jwm
-                    (placa, marca, modelo, ano, tipo_veiculo, motorista,
-                     telefone, cidade, estado, rastreador,
-                     curso_mop, data_cadastro, indicacao, tags, usuario)
-                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
-                """
 
-                for _, row in df_import.iterrows():
-                    cursor.execute(sql, (
-                        norm(row.get("PLACA")),
-                        norm(row.get("MARCA")),
-                        norm(row.get("MODELO")),
-                        norm(row.get("ANO")),
-                        norm(row.get("TIPO DE VEICULO")),
-                        norm(row.get("MOTORISTA")),
-                        norm(row.get("TELEFONE")),
-                        norm(row.get("CIDADE")),
-                        norm(row.get("ESTADO")),
-                        norm(row.get("RASTREADOR")),
-                        norm(row.get("CURSO MOP")),
-                        norm(row.get("DATA DO CADASTRO")),
-                        norm(row.get("INDICACAO")),
-                        norm(row.get("TAGS")),
-                        norm(row.get("USUARIO")),
-                    ))
+cursor.execute(
+    """
+    INSERT INTO parceiros_jwm
+    (placa, marca, modelo, ano, tipo_veiculo, motorista,
+     telefone, cidade, estado, rastreador,
+     curso_mop, data_cadastro, indicacao, tags, usuario)
+    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+    """,
+    (
+        norm(row.get("PLACA")),
+        norm(row.get("MARCA")),
+        norm(row.get("MODELO")),
+        norm(row.get("ANO")),
+        norm(row.get("TIPO DE VEICULO")),
+        norm(row.get("MOTORISTA")),
+        norm(row.get("TELEFONE")),
+        norm(row.get("CIDADE")),
+        norm(row.get("ESTADO")),
+        norm(row.get("RASTREADOR")),
+        norm(row.get("CURSO MOP")),
+        norm(row.get("DATA DO CADASTRO")),
+        norm(row.get("INDICACAO")),
+        norm(row.get("TAGS")),
+        norm(row.get("USUARIO")),
+    )
+)
 
                 conn.commit()
                 cursor.close()

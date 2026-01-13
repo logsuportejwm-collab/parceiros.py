@@ -3,6 +3,7 @@ import pandas as pd
 import unicodedata
 import mysql.connector
 import io
+import os
 
 # ---------------------------------------------------------
 # CONFIGURAÇÃO
@@ -135,7 +136,8 @@ with st.sidebar:
         - 🗺️ **Google Maps** → [Abrir](https://www.google.com/maps)
         - 📊 **Power BI** → [Dashboard](https://app.powerbi.com/links/MSe9_-szX0?ctid=c8335dcc-510d-4853-a36f-b12b7f4be009&pbi_source=linkShare)
         - 📦🚚 **Dimensionamento Veículo** → [App](https://dimensionamento-de-ve-culos---jwm-dvxn4ufxfmnmyanmv3ohte.streamlit.app/)
-    
+""")
+
     # -----------------------------------------
     # MODELO DE IMPORTAÇÃO
     # -----------------------------------------
@@ -177,51 +179,50 @@ with st.sidebar:
         st.info(f"📄 {len(df_import)} registros carregados. Confirme para importar.")
         st.dataframe(df_import, use_container_width=True)
 
-        if st.button("✅ CONFIRMAR IMPORTAÇÃO"):
-            try:
-                conn = get_connection()
-                cursor = conn.cursor()
+if st.button("✅ CONFIRMAR IMPORTAÇÃO"):
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
 
-                sql = """
+        for _, row in df_import.iterrows():
+            cursor.execute(
+                """
+                INSERT INTO parceiros_jwm
+                (placa, marca, modelo, ano, tipo_veiculo, motorista,
+                 telefone, cidade, estado, rastreador,
+                 curso_mop, data_cadastro, indicacao, tags, usuario)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                """,
+                (
+                    norm(row.get("PLACA")),
+                    norm(row.get("MARCA")),
+                    norm(row.get("MODELO")),
+                    norm(row.get("ANO")),
+                    norm(row.get("TIPO DE VEICULO")),
+                    norm(row.get("MOTORISTA")),
+                    norm(row.get("TELEFONE")),
+                    norm(row.get("CIDADE")),
+                    norm(row.get("ESTADO")),
+                    norm(row.get("RASTREADOR")),
+                    norm(row.get("CURSO MOP")),
+                    norm(row.get("DATA DO CADASTRO")),
+                    norm(row.get("INDICACAO")),
+                    norm(row.get("TAGS")),
+                    norm(row.get("USUARIO")),
+                )
+            )
 
-cursor.execute(
-    """
-    INSERT INTO parceiros_jwm
-    (placa, marca, modelo, ano, tipo_veiculo, motorista,
-     telefone, cidade, estado, rastreador,
-     curso_mop, data_cadastro, indicacao, tags, usuario)
-    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
-    """,
-    (
-        norm(row.get("PLACA")),
-        norm(row.get("MARCA")),
-        norm(row.get("MODELO")),
-        norm(row.get("ANO")),
-        norm(row.get("TIPO DE VEICULO")),
-        norm(row.get("MOTORISTA")),
-        norm(row.get("TELEFONE")),
-        norm(row.get("CIDADE")),
-        norm(row.get("ESTADO")),
-        norm(row.get("RASTREADOR")),
-        norm(row.get("CURSO MOP")),
-        norm(row.get("DATA DO CADASTRO")),
-        norm(row.get("INDICACAO")),
-        norm(row.get("TAGS")),
-        norm(row.get("USUARIO")),
-    )
-)
+        conn.commit()
+        cursor.close()
+        conn.close()
 
-                conn.commit()
-                cursor.close()
-                conn.close()
+        st.success("✔ Importação concluída com sucesso!")
+        st.session_state.pop("df_import", None)
+        st.cache_data.clear()
+        st.rerun()
 
-                st.success("✔ Importação concluída com sucesso!")
-                st.session_state.pop("df_import", None)
-                st.cache_data.clear()
-                st.rerun()
-
-            except Exception as e:
-                st.error(f"❌ Erro na importação: {e}")
+    except Exception as e:
+        st.error(f"❌ Erro na importação: {e}")
 
 # ---------------------------------------------------------
 # TABELA

@@ -27,7 +27,7 @@ def norm(x):
         .upper()
 
 # ---------------------------------------------------------
-# CONEXÃO MYSQL (STREAMLIT)
+# CONEXÃO MYSQL (STREAMLIT CLOUD)
 # ---------------------------------------------------------
 def get_connection():
     return mysql.connector.connect(
@@ -59,7 +59,9 @@ def carregar_df():
                 rastreador AS RASTREADOR,
                 curso_mop AS `CURSO MOP`,
                 data_cadastro AS `DATA DO CADASTRO`,
-                indicacao AS INDICACAO
+                indicacao AS INDICACAO,
+                tags AS TAGS,
+                usuario AS USUARIO
             FROM parceiros_jwm
         """
         df = pd.read_sql(query, conn)
@@ -76,30 +78,32 @@ def carregar_df():
 filtros = [
     ("PLACA", "Placa"),
     ("INDICACAO", "Indicação"),
-    ("RASTREADOR","Rastreador"),
-    ("ESTADO","Estado"),
-    ("CIDADE","Cidade"),
-    ("TIPO DE VEICULO","Tipo Veículo"),
-    ("ANO","Ano"),
-    ("MOTORISTA","Motorista"),
-    ("TELEFONE","Telefone"),
-    ("CURSO MOP","Curso MOP"),
+    ("RASTREADOR", "Rastreador"),
+    ("ESTADO", "Estado"),
+    ("CIDADE", "Cidade"),
+    ("TIPO DE VEICULO", "Tipo Veículo"),
+    ("ANO", "Ano"),
+    ("MOTORISTA", "Motorista"),
+    ("TELEFONE", "Telefone"),
+    ("CURSO MOP", "Curso MOP"),
+    ("TAGS", "Tags"),
+    ("USUARIO", "Usuário"),
     ("DATA DO CADASTRO", "Data do cadastro")
 ]
 
-for col,_ in filtros:
+for col, _ in filtros:
     st.session_state.setdefault(f"f_{col}", [])
 
 def clear_filter(col):
     st.session_state[f"f_{col}"] = []
 
 def clear_all_filters():
-    for col,_ in filtros:
+    for col, _ in filtros:
         st.session_state[f"f_{col}"] = []
 
 def filtrar(df):
     temp = df.copy()
-    for col,_ in filtros:
+    for col, _ in filtros:
         vals = st.session_state[f"f_{col}"]
         if vals:
             temp = temp[temp[col].isin(vals)]
@@ -118,6 +122,7 @@ df_base = carregar_df()
 
 with st.sidebar:
     st.title("Filtros")
+
     with st.expander("🎛️ Filtros Inteligentes"):
         for i in range(0, len(filtros), 2):
             colA, colB = st.columns(2)
@@ -129,13 +134,13 @@ with st.sidebar:
                 st.button("❌", on_click=clear_filter, args=(fcol1,), key=f"c_{fcol1}")
 
             if i + 1 < len(filtros):
-                fcol2, flabel2 = filtros[i+1]
+                fcol2, flabel2 = filtros[i + 1]
                 with colB:
                     ops2 = sorted([v for v in df_base[fcol2].unique() if v])
                     st.multiselect(flabel2, ops2, key=f"f_{fcol2}")
                     st.button("❌", on_click=clear_filter, args=(fcol2,), key=f"c_{fcol2}")
 
-    st.button("🧹 LIMPAR TODOS", on_click=clear_all_filters)
+    st.button("🧹 LIMPAR TODOS OS FILTROS", on_click=clear_all_filters)
 
 # ---------------------------------------------------------
 # TABELA
@@ -161,17 +166,22 @@ with st.form("cadastro"):
     with col2:
         ano = st.text_input("Ano")
         motorista = st.text_input("Motorista")
-        curso = st.selectbox("Curso MOP", ["SIM","NAO"])
-        indicacao = st.selectbox("Indicação", ["SIM","NAO"])
+        curso = st.selectbox("Curso MOP", ["SIM", "NAO"])
+        indicacao = st.selectbox("Indicação", ["SIM", "NAO"])
 
     with col3:
         telefone = st.text_input("Telefone")
         cidade = st.text_input("Cidade")
         estado = st.text_input("Estado")
-        rastreador = st.selectbox("Rastreador", ["SIM","NAO"])
+        rastreador = st.selectbox("Rastreador", ["SIM", "NAO"])
 
     with col4:
         data = st.text_input("Data do cadastro")
+        tags = st.text_input("Tags")
+        usuario = st.selectbox(
+            "Usuário",
+            ["CONECTCAR", "SEM PARAR", "VELOE", "MOVE MAIS"]
+        )
 
     send = st.form_submit_button("💾 SALVAR")
 
@@ -187,15 +197,26 @@ if send:
             INSERT INTO parceiros_jwm
             (placa, marca, modelo, ano, tipo_veiculo, motorista,
              telefone, cidade, estado, rastreador,
-             curso_mop, data_cadastro, indicacao)
-            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+             curso_mop, data_cadastro, indicacao, tags, usuario)
+            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
         """
 
         values = (
-            norm(placa), norm(marca), norm(modelo), norm(ano),
-            norm(tipo), norm(motorista), norm(telefone),
-            norm(cidade), norm(estado), norm(rastreador),
-            norm(curso), norm(data), norm(indicacao)
+            norm(placa),
+            norm(marca),
+            norm(modelo),
+            norm(ano),
+            norm(tipo),
+            norm(motorista),
+            norm(telefone),
+            norm(cidade),
+            norm(estado),
+            norm(rastreador),
+            norm(curso),
+            norm(data),
+            norm(indicacao),
+            norm(tags),
+            norm(usuario)
         )
 
         cursor.execute(sql, values)

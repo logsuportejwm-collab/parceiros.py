@@ -27,7 +27,7 @@ def norm(x):
         .upper()
 
 # ---------------------------------------------------------
-# CONEXÃO MYSQL (STREAMLIT CLOUD)
+# CONEXÃO MYSQL
 # ---------------------------------------------------------
 def get_connection():
     return mysql.connector.connect(
@@ -88,7 +88,6 @@ filtros = [
     ("CURSO MOP", "Curso MOP"),
     ("TAGS", "Tags"),
     ("USUARIO", "Usuário"),
-    ("DATA DO CADASTRO", "Data do cadastro")
 ]
 
 for col, _ in filtros:
@@ -140,7 +139,7 @@ with st.sidebar:
                     st.multiselect(flabel2, ops2, key=f"f_{fcol2}")
                     st.button("❌", on_click=clear_filter, args=(fcol2,), key=f"c_{fcol2}")
 
-    st.button("🧹 LIMPAR TODOS OS FILTROS", on_click=clear_all_filters)
+    st.button("🧹 LIMPAR TODOS", on_click=clear_all_filters)
 
 # ---------------------------------------------------------
 # TABELA
@@ -153,6 +152,13 @@ st.dataframe(df_filtrado, use_container_width=True)
 # FORMULÁRIO
 # ---------------------------------------------------------
 st.markdown("## 📝 Cadastro de Parceiro / Motorista")
+
+OPCOES_TAGS = [
+    "CONECT CAR",
+    "SEM PARAR",
+    "VELOE",
+    "MOVE MAIS"
+]
 
 with st.form("cadastro"):
     col1, col2, col3, col4 = st.columns(4)
@@ -177,11 +183,8 @@ with st.form("cadastro"):
 
     with col4:
         data = st.text_input("Data do cadastro")
-        tags = st.text_input("Tags")
-        usuario = st.selectbox(
-            "Usuário",
-            ["CONECTCAR", "SEM PARAR", "VELOE", "MOVE MAIS"]
-        )
+        tags = st.selectbox("Tags", OPCOES_TAGS)   # ✅ MENU SUSPENSO
+        usuario = st.text_input("Usuário")         # ✅ CAMPO LIVRE
 
     send = st.form_submit_button("💾 SALVAR")
 

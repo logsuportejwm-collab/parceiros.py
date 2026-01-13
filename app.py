@@ -101,9 +101,19 @@ df_base = carregar_df()
 
 with st.sidebar:
     st.title("Filtros")
-    for col,label in filtros:
+
+    col_a, col_b = st.columns(2)
+
+    for i, (col, label) in enumerate(filtros):
         ops = sorted([v for v in df_base[col].unique() if v])
-        st.multiselect(label, ops, key=f"f_{col}")
+
+        if i % 2 == 0:
+            with col_a:
+                st.multiselect(label, ops, key=f"f_{col}")
+        else:
+            with col_b:
+                st.multiselect(label, ops, key=f"f_{col}")
+
 
     st.markdown("---")
 

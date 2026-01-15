@@ -21,16 +21,16 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# =========================================================
-# HEADER
-# =========================================================
-st.image(
-    "https://jwmlogistica.com.br/wp-content/uploads/2022/06/cropped-logo-jwm.png",
-    width=420
-)
-st.markdown("## **Gestão de Parceiros 🚛💼🌎**")
-st.write("**Motoristas Terceiros**")
-st.markdown("---")
+# --------------------------------------------
+# CABEÇALHO
+# --------------------------------------------
+colA, colB = st.columns([2, 1])
+with colA:
+    st.image(os.path.join(PASTA_BASE, "topo_JWMNovo.jpg"), use_container_width=True)
+    st.title("Gestão de Parceiros 🚛💼🌎")
+    st.write("Motoristas Terceiros")
+with colB:
+    st.image(os.path.join(PASTA_BASE, "mapinha.png"), use_container_width=True)
 
 # =========================================================
 # FUNÇÕES AUXILIARES
@@ -134,14 +134,13 @@ with st.sidebar:
         else:
             st.info("QR Code não encontrado")
 
-    st.markdown("### 🔗 Links Importantes")
+     st.markdown("### 🔗 Links importantes")
     st.markdown("""
-    - 🗺️ [Google Maps](https://www.google.com/maps)
-    - 🌐 [Site JWM](https://jwmlogistica.com.br)
-    - 📊 [Power BI](https://app.powerbi.com)
-    - 📦🚚 [Dimensionamento Veículo](https://dimensionamento-de-ve-culos---jwm-dvxn4ufxfmnmyanmv3ohte.streamlit.app/)
+        - 🌐 **Site JWM** → [Acessar](https://jwmlogistica.com.br)
+        - 🗺️ **Google Maps** → [Abrir](https://www.google.com/maps)
+        - 📊 **Power BI** → [Dashboard](https://app.powerbi.com/links/MSe9_-szX0?ctid=c8335dcc-510d-4853-a36f-b12b7f4be009&pbi_source=linkShare)
+        - 📦🚚 **Dimensionamento Veículo** → [App](https://dimensionamento-de-ve-culos---jwm-dvxn4ufxfmnmyanmv3ohte.streamlit.app/)
     """)
-
 
 # =========================================================
 # TABELA

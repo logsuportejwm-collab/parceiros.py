@@ -53,24 +53,30 @@ if "logado" not in st.session_state:
 def tela_login():
     st.markdown("""
     <style>
-    /* FUNDO DO LOGIN */
+    /* FUNDO LOGIN */
     .stApp {
         background: url("fundo.png") no-repeat center center fixed;
         background-size: cover;
     }
 
-    /* REMOVE CAIXAS / RETÂNGULOS */
-    section.main > div,
-    div[data-testid="stVerticalBlock"] {
+    /* REMOVE CONTAINERS PADRÃO */
+    section.main > div {
         background: transparent !important;
         box-shadow: none !important;
+        padding: 0 !important;
     }
 
-    /* CAIXA DE LOGIN À ESQUERDA */
+    /* CAIXA LOGIN À ESQUERDA */
     .login-box {
         width: 320px;
         margin-left: 60px;
-        margin-top: 120px;
+        margin-top: 140px;
+    }
+
+    /* TÍTULO MENOR */
+    .login-box h1 {
+        font-size: 26px;
+        margin-bottom: 20px;
     }
 
     /* INPUTS MENORES */
@@ -79,9 +85,14 @@ def tela_login():
         font-size: 14px !important;
     }
 
+    label {
+        font-size: 13px !important;
+    }
+
+    /* BOTÃO MENOR */
     button {
+        width: 110px;
         height: 36px;
-        width: 120px;
         font-size: 14px;
     }
     </style>
@@ -103,18 +114,16 @@ def tela_login():
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-# BLOQUEIA O APP SE NÃO ESTIVER LOGADO
+# 👉 BLOQUEIA O APP SE NÃO ESTIVER LOGADO
 if not st.session_state.logado:
     tela_login()
     st.stop()
-
 # =========================================================
 # 🔒 BLOQUEIA O APP ATÉ LOGAR (ESSENCIAL)
 # =========================================================
 if not st.session_state.logado:
     tela_login()
     st.stop()
-
 
 # =========================================================
 # FUNDO DO APP 

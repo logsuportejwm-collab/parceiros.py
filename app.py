@@ -142,48 +142,6 @@ with st.sidebar:
     - 📦🚚 [Dimensionamento Veículo](https://dimensionamento-de-ve-culos---jwm-dvxn4ufxfmnmyanmv3ohte.streamlit.app/)
     """)
 
-# =========================================================
-# IMPORTAÇÃO
-# =========================================================
-st.markdown("## 📤 Importar Planilha")
-uploaded = st.file_uploader(
-    "Selecione o arquivo (.xls ou .xlsx)",
-    type=["xls", "xlsx"]
-)
-
-if uploaded:
-    df_import = pd.read_excel(uploaded).fillna("")
-    df_import.columns = [norm(c) for c in df_import.columns]
-
-    st.info(f"📄 {len(df_import)} registros prontos para importação")
-    st.dataframe(df_import, use_container_width=True)
-
-    if st.button("✅ CONFIRMAR IMPORTAÇÃO"):
-        try:
-            conn = get_connection()
-            cursor = conn.cursor()
-
-            for _, row in df_import.iterrows():
-                cursor.execute("""
-                    INSERT INTO parceiros_jwm
-                    (placa, marca, modelo, ano, tipo_veiculo, motorista,
-                     telefone, cidade, estado, rastreador,
-                     curso_mop, data_cadastro, indicacao, tags, usuario)
-                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
-                """, tuple(norm(row.get(c)) for c in df_import.columns))
-
-            conn.commit()
-            cursor.close()
-            conn.close()
-
-            st.success("✔ Importação realizada com sucesso!")
-            st.cache_data.clear()
-            st.rerun()
-
-        except Exception as e:
-            st.error(f"❌ Erro na importação: {e}")
-
-st.markdown("---")
 
 # =========================================================
 # TABELA

@@ -54,71 +54,79 @@ if "logado" not in st.session_state:
 # TELA LOGIN (FORÇADA À ESQUERDA)
 # =========================================================
 def tela_login():
-    st.markdown("""
-    <style>
-    /* FUNDO LOGIN */
-    .stApp {
-        background: url("fundo.png") no-repeat center center fixed;
-        background-size: cover;
-    }
+   st.markdown("""
+<style>
 
-    /* REMOVE CONTAINERS PRETOS */
-    section.main > div {
-        background: transparent !important;
-        box-shadow: none !important;
-        padding: 0 !important;
-    }
+/* ===== FUNDO ===== */
+.stApp {
+    background: url("fundo.png") no-repeat center center fixed;
+    background-size: cover;
+}
 
-    /* CAIXA LOGIN À ESQUERDA */
-    .login-box {
-        width: 320px;          /* ⬅️ MENOR */
-        margin-left: 60px;     /* mantém à esquerda */
-        margin-top: 120px;
-    }
+/* ===== REMOVE CENTRALIZAÇÃO DO STREAMLIT ===== */
+section.main > div {
+    max-width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
 
-    /* TÍTULO */
-    .login-box h1 {
-        font-size: 24px;       /* ⬅️ MENOR */
-        margin-bottom: 18px;
-    }
+/* ===== CAIXA DE LOGIN ===== */
+.login-box {
+    width: 340px;
+    margin-left: 60px;
+    margin-top: 110px;
+}
 
-    /* LABELS */
-    .login-box label {
-        font-size: 12px !important;
-    }
+/* ===== TÍTULO ===== */
+.login-box h1 {
+    font-size: 26px;
+    margin-bottom: 18px;
+}
 
-    /* INPUTS */
-    .login-box input {
-        height: 34px !important;   /* ⬅️ MENOR */
-        font-size: 13px !important;
-    }
+/* ===== LABELS ===== */
+.login-box label {
+    font-size: 13px !important;
+}
 
-    /* BOTÃO */
-    .login-box button {
-        width: 110px;
-        height: 34px;
-        font-size: 13px;
-        margin-top: 10px;
-    }
-    </style>
-    """, unsafe_allow_html=True)
+/* ===== INPUTS ===== */
+.login-box input {
+    height: 38px !important;
+    font-size: 14px !important;
+}
 
-    st.markdown('<div class="login-box">', unsafe_allow_html=True)
+/* ===== BOTÃO ===== */
+.login-box button {
+    width: 120px;
+    height: 38px;
+    font-size: 14px;
+}
 
-    st.title("🔐 Login - Parceiros JWM")
-    usuario = st.text_input("Usuário")
-    senha = st.text_input("Senha", type="password")
+/* ===== REMOVE SOMBRAS E FUNDOS ===== */
+div[data-testid="stForm"],
+div[data-testid="stVerticalBlock"] {
+    background: transparent !important;
+    box-shadow: none !important;
+}
 
-    if st.button("Entrar"):
-        if autenticar(usuario, senha):
-            st.session_state.logado = True
-            st.session_state.usuario = usuario
-            st.rerun()
-        else:
-            st.error("❌ Usuário ou senha inválidos")
+</style>
+""", unsafe_allow_html=True)
 
-    st.markdown('</div>', unsafe_allow_html=True)
+st.markdown('<div class="login-box">', unsafe_allow_html=True)
 
+st.title("🔐 Login - Parceiros JWM")
+usuario = st.text_input("Usuário")
+senha = st.text_input("Senha", type="password")
+
+if st.button("Entrar"):
+    if autenticar(usuario, senha):
+        st.session_state.logado = True
+        st.session_state.usuario = usuario
+        st.rerun()
+    else:
+        st.error("❌ Usuário ou senha inválidos")
+
+st.markdown('</div>', unsafe_allow_html=True)
+   
 # =========================================================
 # BLOQUEIA APP SEM LOGIN
 # =========================================================

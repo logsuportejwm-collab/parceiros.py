@@ -5,19 +5,6 @@ import mysql.connector
 import os
 
 # =========================================================
-# CRIANDO TABDELA DE USUÁRIOS 
-# =========================================================
-CREATE TABLE usuarios_app (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    usuario VARCHAR(50) UNIQUE NOT NULL,
-    senha VARCHAR(255) NOT NULL,
-    ativo TINYINT DEFAULT 1
-);
-
-INSERT INTO usuarios_app (usuario, senha)
-VALUES ('admin', SHA2('123', 256));
-
-# =========================================================
 # FUNÇÕES DE LOGIN
 # =========================================================
 def autenticar(usuario, senha):

@@ -50,25 +50,23 @@ def autenticar(usuario, senha):
 if "logado" not in st.session_state:
     st.session_state.logado = False
 
-
 def tela_login():
     st.markdown("""
     <style>
-    /* FUNDO COM IMAGEM */
+    /* FUNDO DO LOGIN */
     .stApp {
         background: url("fundo.png") no-repeat center center fixed;
         background-size: cover;
     }
 
-    /* REMOVE O RETÂNGULO PRETO */
-    div[data-testid="stVerticalBlock"],
-    div[data-testid="stContainer"],
-    section.main > div {
+    /* REMOVE CAIXAS / RETÂNGULOS */
+    section.main > div,
+    div[data-testid="stVerticalBlock"] {
         background: transparent !important;
         box-shadow: none !important;
     }
 
-    /* LOGIN À ESQUERDA */
+    /* CAIXA DE LOGIN À ESQUERDA */
     .login-box {
         width: 320px;
         margin-left: 60px;
@@ -77,12 +75,13 @@ def tela_login():
 
     /* INPUTS MENORES */
     input {
-        height: 38px !important;
+        height: 36px !important;
         font-size: 14px !important;
     }
+
     button {
+        height: 36px;
         width: 120px;
-        height: 38px;
         font-size: 14px;
     }
     </style>
@@ -104,6 +103,10 @@ def tela_login():
 
     st.markdown('</div>', unsafe_allow_html=True)
 
+# BLOQUEIA O APP SE NÃO ESTIVER LOGADO
+if not st.session_state.logado:
+    tela_login()
+    st.stop()
 
 # =========================================================
 # 🔒 BLOQUEIA O APP ATÉ LOGAR (ESSENCIAL)

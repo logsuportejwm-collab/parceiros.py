@@ -5,8 +5,10 @@ import mysql.connector
 import os
 
 # =========================================================
-# CONFIGURAÇÃO DA PÁGINA
+# CONFIGURAÇÃO BASE
 # =========================================================
+PASTA_BASE = os.path.dirname(os.path.abspath(__file__))
+
 st.set_page_config(
     page_title="Parceiros JWM",
     layout="wide"
@@ -21,16 +23,22 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --------------------------------------------
+# =========================================================
 # CABEÇALHO
-# --------------------------------------------
+# =========================================================
 colA, colB = st.columns([2, 1])
+
 with colA:
-    st.image(os.path.join(PASTA_BASE, "topo_JWMNovo.jpg"), use_container_width=True)
+    if os.path.exists(os.path.join(PASTA_BASE, "topo_JWMNovo.jpg")):
+        st.image(os.path.join(PASTA_BASE, "topo_JWMNovo.jpg"), use_container_width=True)
     st.title("Gestão de Parceiros 🚛💼🌎")
     st.write("Motoristas Terceiros")
+
 with colB:
-    st.image(os.path.join(PASTA_BASE, "mapinha.png"), use_container_width=True)
+    if os.path.exists(os.path.join(PASTA_BASE, "mapinha.png")):
+        st.image(os.path.join(PASTA_BASE, "mapinha.png"), use_container_width=True)
+
+st.markdown("---")
 
 # =========================================================
 # FUNÇÕES AUXILIARES
@@ -118,8 +126,8 @@ def filtrar(df):
 # =========================================================
 with st.sidebar:
     st.title("🎛️ Filtros")
-    colA, colB = st.columns(2)
 
+    colA, colB = st.columns(2)
     for i, (col, label) in enumerate(filtros):
         opcoes = sorted([v for v in df_base[col].unique() if v])
         with (colA if i % 2 == 0 else colB):
@@ -129,17 +137,17 @@ with st.sidebar:
     st.button("🧹 LIMPAR TODOS OS FILTROS", on_click=clear_all_filters)
 
     with st.expander("📘 IST (Instrução de Trabalho)"):
-        if os.path.exists("QR Code.png"):
-            st.image("QR Code.png", width=120)
+        if os.path.exists(os.path.join(PASTA_BASE, "QR Code.png")):
+            st.image(os.path.join(PASTA_BASE, "QR Code.png"), width=120)
         else:
             st.info("QR Code não encontrado")
 
-     st.markdown("### 🔗 Links importantes")
+    st.markdown("### 🔗 Links importantes")
     st.markdown("""
-        - 🌐 **Site JWM** → [Acessar](https://jwmlogistica.com.br)
-        - 🗺️ **Google Maps** → [Abrir](https://www.google.com/maps)
-        - 📊 **Power BI** → [Dashboard](https://app.powerbi.com/links/MSe9_-szX0?ctid=c8335dcc-510d-4853-a36f-b12b7f4be009&pbi_source=linkShare)
-        - 📦🚚 **Dimensionamento Veículo** → [App](https://dimensionamento-de-ve-culos---jwm-dvxn4ufxfmnmyanmv3ohte.streamlit.app/)
+    - 🌐 **Site JWM** → [Acessar](https://jwmlogistica.com.br)
+    - 🗺️ **Google Maps** → [Abrir](https://www.google.com/maps)
+    - 📊 **Power BI** → [Dashboard](https://app.powerbi.com/links/MSe9_-szX0?ctid=c8335dcc-510d-4853-a36f-b12b7f4be009&pbi_source=linkShare)
+    - 📦🚚 **Dimensionamento Veículo** → [App](https://dimensionamento-de-ve-culos---jwm-dvxn4ufxfmnmyanmv3ohte.streamlit.app/)
     """)
 
 # =========================================================
@@ -157,7 +165,6 @@ def limpar_formulario():
         "telefone","cidade","estado","data","usuario"
     ]:
         st.session_state[k] = ""
-
     st.session_state.update({
         "curso": "SIM",
         "indicacao": "SIM",
@@ -212,7 +219,6 @@ if salvar:
     try:
         conn = get_connection()
         cursor = conn.cursor()
-
         cursor.execute("""
             INSERT INTO parceiros_jwm
             (placa, marca, modelo, ano, tipo_veiculo, motorista,
@@ -226,11 +232,9 @@ if salvar:
             norm(curso), norm(data), norm(indicacao),
             norm(tags), norm(usuario)
         ))
-
         conn.commit()
         cursor.close()
         conn.close()
-
         st.success("✔ Registro salvo com sucesso!")
         st.cache_data.clear()
         st.rerun()

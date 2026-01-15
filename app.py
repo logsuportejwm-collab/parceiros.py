@@ -5,7 +5,7 @@ import mysql.connector
 import os
 
 # =========================================================
-# CONFIGURAÇÃO BASE (SEMPRE PRIMEIRO)
+# CONFIGURAÇÃO BASE
 # =========================================================
 PASTA_BASE = os.path.dirname(os.path.abspath(__file__))
 st.set_page_config(
@@ -26,7 +26,7 @@ def get_connection():
     )
 
 # =========================================================
-# FUNÇÕES DE LOGIN
+# FUNÇÃO AUTENTICAÇÃO
 # =========================================================
 def autenticar(usuario, senha):
     conn = get_connection()
@@ -38,10 +38,10 @@ def autenticar(usuario, senha):
           AND senha = SHA2(%s, 256)
           AND ativo = 1
     """, (usuario, senha))
-    resultado = cursor.fetchone()
+    ok = cursor.fetchone() is not None
     cursor.close()
     conn.close()
-    return resultado is not None
+    return ok
 
 # =========================================================
 # CONTROLE DE LOGIN
@@ -52,49 +52,72 @@ if "logado" not in st.session_state:
 def tela_login():
     st.markdown("""
     <style>
-    /* FUNDO SOMENTE DO LOGIN */
+    /* FUNDO DO LOGIN */
     .stApp {
         background: url("fundo.png") no-repeat center center fixed;
         background-size: cover;
     }
 
-    /* REMOVE QUALQUER CAIXA PRETA */
+    /* REMOVE CAIXAS PADRÃO */
     section.main > div {
         background: transparent !important;
         box-shadow: none !important;
+        padding: 0 !important;
     }
 
-    /* AJUSTES VISUAIS */
-    label { font-size: 13px !important; }
-    input { height: 36px !important; font-size: 14px !important; }
-    button { height: 36px !important; font-size: 14px !important; }
+    /* CONTAINER LOGIN */
+    .login-box {
+        width: 380px;
+        margin-left: 70px;
+        margin-top: 150px;
+    }
+
+    /* TÍTULO */
+    .login-box h1 {
+        font-size: 30px;
+        margin-bottom: 22px;
+        white-space: normal;
+    }
+
+    /* LABEL */
+    .login-box label {
+        font-size: 14px !important;
+    }
+
+    /* INPUT */
+    .login-box input {
+        height: 42px !important;
+        font-size: 15px !important;
+    }
+
+    /* BOTÃO */
+    .login-box button {
+        width: 140px;
+        height: 40px;
+        font-size: 15px;
+        margin-top: 10px;
+    }
     </style>
     """, unsafe_allow_html=True)
 
-    col_esq, col_centro, col_dir = st.columns([1.2, 4, 4])
+    st.markdown('<div class="login-box">', unsafe_allow_html=True)
 
-    with col_esq:
-        st.markdown("<br><br><br>", unsafe_allow_html=True)
-        st.title("🔐 Login - Parceiros JWM")
+    st.title("🔐 Login - Parceiros JWM")
 
-        usuario = st.text_input("Usuário")
-        senha = st.text_input("Senha", type="password")
+    usuario = st.text_input("Usuário")
+    senha = st.text_input("Senha", type="password")
 
-        if st.button("Entrar"):
-            if autenticar(usuario, senha):
-                st.session_state.logado = True
-                st.session_state.usuario = usuario
-                st.rerun()
-            else:
-                st.error("❌ Usuário ou senha inválidos")
+    if st.button("Entrar"):
+        if autenticar(usuario, senha):
+            st.session_state.logado = True
+            st.session_state.usuario = usuario
+            st.rerun()
+        else:
+            st.error("❌ Usuário ou senha inválidos")
 
-#  BLOQUEIA O APP SE NÃO ESTIVER LOGADO
-if not st.session_state.logado:
-    tela_login()
-    st.stop()
-# =========================================================
-# 🔒 BLOQUEIA O APP ATÉ LOGAR (ESSENCIAL)
-# =========================================================
+    st.markdown('</div>', unsafe_allow_html=True)
+
+# 🔒 BLOQUEIA APP SEM LOGIN
 if not st.session_state.logado:
     tela_login()
     st.stop()

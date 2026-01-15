@@ -1,17 +1,13 @@
 import streamlit as st
 import pandas as pd
 import unicodedata
-import mysql.connector
 import os
+from db import get_connection
 
-# =========================================================
-# CONFIGURAÇÃO DA PÁGINA
-# =========================================================
-st.set_page_config(
-    page_title="Parceiros JWM",
-    layout="wide"
-)
-
+# ---------------------------------------------------------
+# CONFIGURAÇÃO
+# ---------------------------------------------------------
+st.set_page_config(page_title="Parceiros JWM", layout="wide")
 st.markdown("""
 <style>
 .stApp {
@@ -21,262 +17,257 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# =========================================================
-# HEADER
-# =========================================================
-st.image(
-    "https://jwmlogistica.com.br/wp-content/uploads/2022/06/cropped-logo-jwm.png",
-    width=420
-)
-st.markdown("## **Gestão de Parceiros 🚛💼🌎**")
-st.write("**Motoristas Terceiros**")
-st.markdown("---")
-
-# =========================================================
-# FUNÇÕES AUXILIARES
-# =========================================================
+# --------------------------------------------
+# NORMALIZADOR
+# --------------------------------------------
 def norm(x):
-    if x is None:
-        return ""
-    return unicodedata.normalize(
-        "NFKD", str(x).strip()
-    ).encode("ascii", "ignore").decode().upper()
+    return unicodedata.normalize("NFKD", str(x).strip()) \
+        .encode("ascii", "ignore") \
+        .decode() \
+        .upper()
 
-def get_connection():
-    return mysql.connector.connect(
-        host=st.secrets["mysql"]["host"],
-        user=st.secrets["mysql"]["user"],
-        password=st.secrets["mysql"]["password"],
-        database=st.secrets["mysql"]["database"],
-        port=st.secrets["mysql"]["port"]
-    )
-
-# =========================================================
-# CARREGAR DADOS
-# =========================================================
+# --------------------------------------------
+# CARREGAR DADOS DO BANCO
+# --------------------------------------------
 @st.cache_data(show_spinner=False)
 def carregar_df():
-    conn = get_connection()
-    df = pd.read_sql("""
-        SELECT
-            placa AS PLACA,
-            marca AS MARCA,
-            modelo AS MODELO,
-            ano AS ANO,
-            tipo_veiculo AS `TIPO DE VEICULO`,
-            motorista AS MOTORISTA,
-            telefone AS TELEFONE,
-            cidade AS CIDADE,
-            estado AS ESTADO,
-            rastreador AS RASTREADOR,
-            curso_mop AS `CURSO MOP`,
-            data_cadastro AS `DATA DO CADASTRO`,
-            indicacao AS INDICACAO,
-            tags AS TAGS,
-            usuario AS USUARIO
-        FROM parceiros_jwm
-    """, conn)
-    conn.close()
-    df.columns = [norm(c) for c in df.columns]
-    return df.fillna("")
+    try:
+        conn = get_connection()
+        query = """
+            SELECT
+                placa AS PLACA,
+                marca AS MARCA,
+                modelo AS MODELO,
+                ano AS ANO,
+                tipo_veiculo AS `TIPO DE VEICULO`,
+                motorista AS MOTORISTA,
+                telefone AS TELEFONE,
+                cidade AS CIDADE,
+                estado AS ESTADO,
+                rastreador AS RASTREADOR,
+                curso_mop AS `CURSO MOP`,
+                data_cadastro AS `DATA DO CADASTRO`,
+                indicacao AS INDICACAO
+            FROM parceiros_jwm
+        """
+        df = pd.read_sql(query, conn)
+        conn.close()
+        df.columns = [norm(c) for c in df.columns]
+        return df.fillna("")
+    except Exception as e:
+        st.error(f"❌ Erro ao carregar dados do banco: {e}")
+        return pd.DataFrame()
 
-df_base = carregar_df()
-
-# =========================================================
-# FILTROS
-# =========================================================
+# --------------------------------------------
+# LISTA DE FILTROS
+# --------------------------------------------
 filtros = [
     ("PLACA", "Placa"),
     ("INDICACAO", "Indicação"),
-    ("RASTREADOR", "Rastreador"),
-    ("ESTADO", "Estado"),
-    ("CIDADE", "Cidade"),
-    ("TIPO DE VEICULO", "Tipo Veículo"),
-    ("ANO", "Ano"),
-    ("MOTORISTA", "Motorista"),
-    ("TAGS", "Tags"),
-    ("USUARIO", "Usuário")
+    ("RASTREADOR","Rastreador"),
+    ("ESTADO","Estado"),
+    ("CIDADE","Cidade"),
+    ("TIPO DE VEICULO","Tipo Veículo"),
+    ("ANO","Ano"),
+    ("MOTORISTA","Motorista"),
+    ("TELEFONE","Telefone"),
+    ("CURSO MOP","Curso MOP"),
+    ("DATA DO CADASTRO", "Data do cadastro")
 ]
 
-for col, _ in filtros:
+# --------------------------------------------
+# SESSION STATE (FILTROS)
+# --------------------------------------------
+for col,_ in filtros:
     st.session_state.setdefault(f"f_{col}", [])
 
+def clear_filter(col):
+    st.session_state[f"f_{col}"] = []
+
 def clear_all_filters():
-    for col, _ in filtros:
+    for col,_ in filtros:
         st.session_state[f"f_{col}"] = []
 
+# --------------------------------------------
+# FUNÇÃO DE FILTRAGEM
+# --------------------------------------------
 def filtrar(df):
     temp = df.copy()
-    for col, _ in filtros:
-        valores = st.session_state.get(f"f_{col}")
-        if valores:
-            temp = temp[temp[col].isin(valores)]
+    for col,_ in filtros:
+        vals = st.session_state.get(f"f_{col}", [])
+        if vals:
+            temp = temp[temp[col].isin(vals)]
     return temp
 
-# =========================================================
+# --------------------------------------------
+# CONTROLE DE LIMPEZA DO FORMULÁRIO
+# --------------------------------------------
+inputs = {
+    "placa": "",
+    "marca": "",
+    "modelo": "",
+    "tipo": "",
+    "ano": "",
+    "motorista": "",
+    "curso": "SIM",
+    "indicacao": "SIM",
+    "telefone": "",
+    "cidade": "",
+    "estado": "",
+    "rastreador": "SIM",
+    "data": ""
+}
+
+st.session_state.setdefault("do_clear", False)
+
+if st.session_state["do_clear"]:
+    for k, v in inputs.items():
+        st.session_state[f"w_{k}"] = v
+    st.session_state["do_clear"] = False
+
+for k, v in inputs.items():
+    st.session_state.setdefault(f"w_{k}", v)
+
+# --------------------------------------------
+# CABEÇALHO
+# --------------------------------------------
+colA, colB = st.columns([2, 1])
+with colA:
+    st.title("Gestão de Parceiros 🚛💼🌎")
+    st.write("Motoristas Terceiros")
+with colB:
+    pass
+
+# --------------------------------------------
 # SIDEBAR
-# =========================================================
+# --------------------------------------------
+df_base = carregar_df()
+
 with st.sidebar:
-    st.title("🎛️ Filtros")
-    colA, colB = st.columns(2)
+    st.title("Filtros")
+    with st.expander("🎛️ Filtros Inteligentes"):
+        for i in range(0, len(filtros), 2):
+            colA, colB = st.columns(2)
 
-    for i, (col, label) in enumerate(filtros):
-        opcoes = sorted([v for v in df_base[col].unique() if v])
-        with (colA if i % 2 == 0 else colB):
-            st.multiselect(label, opcoes, key=f"f_{col}")
+            fcol1, flabel1 = filtros[i]
+            with colA:
+                df_temp = df_base.copy()
+                for col_other,_ in filtros:
+                    if col_other != fcol1 and st.session_state[f"f_{col_other}"]:
+                        df_temp = df_temp[df_temp[col_other].isin(st.session_state[f"f_{col_other}"])]
+                ops = sorted([v for v in df_temp[fcol1].unique() if v])
+                st.multiselect(
+                    flabel1,
+                    ops,
+                    default=st.session_state[f"f_{fcol1}"],
+                    key=f"f_{fcol1}"
+                )
+                st.button("❌ Limpar", on_click=clear_filter, args=(fcol1,), key=f"c_{fcol1}")
 
-    st.markdown("---")
+            if i + 1 < len(filtros):
+                fcol2, flabel2 = filtros[i+1]
+                with colB:
+                    df_temp = df_base.copy()
+                    for col_other,_ in filtros:
+                        if col_other != fcol2 and st.session_state[f"f_{col_other}"]:
+                            df_temp = df_temp[df_temp[col_other].isin(st.session_state[f"f_{col_other}"])]
+                    ops2 = sorted([v for v in df_temp[fcol2].unique() if v])
+                    st.multiselect(
+                        flabel2,
+                        ops2,
+                        default=st.session_state[f"f_{fcol2}"],
+                        key=f"f_{fcol2}"
+                    )
+                    st.button("❌ Limpar", on_click=clear_filter, args=(fcol2,), key=f"c_{fcol2}")
+
     st.button("🧹 LIMPAR TODOS OS FILTROS", on_click=clear_all_filters)
 
-    with st.expander("📘 IST (Instrução de Trabalho)"):
-        if os.path.exists("QR Code.png"):
-            st.image("QR Code.png", width=120)
-        else:
-            st.info("QR Code não encontrado")
-
-    st.markdown("### 🔗 Links Importantes")
-    st.markdown("""
-    - 🗺️ [Google Maps](https://www.google.com/maps)
-    - 🌐 [Site JWM](https://jwmlogistica.com.br)
-    - 📊 [Power BI](https://app.powerbi.com)
-    - 📦🚚 [Dimensionamento Veículo](https://dimensionamento-de-ve-culos---jwm-dvxn4ufxfmnmyanmv3ohte.streamlit.app/)
-    """)
-
-# =========================================================
-# IMPORTAÇÃO
-# =========================================================
-st.markdown("## 📤 Importar Planilha")
-uploaded = st.file_uploader(
-    "Selecione o arquivo (.xls ou .xlsx)",
-    type=["xls", "xlsx"]
-)
-
-if uploaded:
-    df_import = pd.read_excel(uploaded).fillna("")
-    df_import.columns = [norm(c) for c in df_import.columns]
-
-    st.info(f"📄 {len(df_import)} registros prontos para importação")
-    st.dataframe(df_import, use_container_width=True)
-
-    if st.button("✅ CONFIRMAR IMPORTAÇÃO"):
-        try:
-            conn = get_connection()
-            cursor = conn.cursor()
-
-            for _, row in df_import.iterrows():
-                cursor.execute("""
-                    INSERT INTO parceiros_jwm
-                    (placa, marca, modelo, ano, tipo_veiculo, motorista,
-                     telefone, cidade, estado, rastreador,
-                     curso_mop, data_cadastro, indicacao, tags, usuario)
-                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
-                """, tuple(norm(row.get(c)) for c in df_import.columns))
-
-            conn.commit()
-            cursor.close()
-            conn.close()
-
-            st.success("✔ Importação realizada com sucesso!")
-            st.cache_data.clear()
-            st.rerun()
-
-        except Exception as e:
-            st.error(f"❌ Erro na importação: {e}")
-
-st.markdown("---")
-
-# =========================================================
+# --------------------------------------------
 # TABELA
-# =========================================================
-st.subheader("📋 Dados Filtrados")
-st.dataframe(filtrar(df_base), use_container_width=True)
+# --------------------------------------------
+df_filtrado = filtrar(df_base).drop(columns=["INDICACAO"], errors="ignore")
+st.subheader("📋 Dados filtrados")
+st.dataframe(df_filtrado, use_container_width=True)
 
-# =========================================================
-# FUNÇÃO LIMPAR FORMULÁRIO
-# =========================================================
-def limpar_formulario():
-    for k in [
-        "placa","marca","modelo","tipo","ano","motorista",
-        "telefone","cidade","estado","data","usuario"
-    ]:
-        st.session_state[k] = ""
+# --------------------------------------------
+# FORMULÁRIO
+# --------------------------------------------
+st.markdown("## 📝 Cadastro de Parceiro / Motorista")
+with st.form("cadastro", clear_on_submit=False):
+    col1, col2, col3, col4 = st.columns(4)
 
-    st.session_state.update({
-        "curso": "SIM",
-        "indicacao": "SIM",
-        "rastreador": "SIM",
-        "tags": "CONECT CAR"
-    })
+    with col1:
+        st.text_input("Placa", key="w_placa")
+        st.text_input("Marca", key="w_marca")
+        st.text_input("Modelo", key="w_modelo")
+        st.text_input("Tipo de Veículo / Carroceria", key="w_tipo")
 
-# =========================================================
-# CADASTRO MANUAL
-# =========================================================
-st.markdown("## 📝 Cadastro Manual")
+    with col2:
+        st.text_input("Ano", key="w_ano")
+        st.text_input("Motorista", key="w_motorista")
+        st.selectbox("Curso", ["SIM","NAO"], key="w_curso")
+        st.selectbox("Indicação", ["SIM","NAO"], key="w_indicacao")
 
-with st.form("cadastro"):
-    c1, c2, c3, c4 = st.columns(4)
+    with col3:
+        st.text_input("Telefone", key="w_telefone")
+        st.text_input("Cidade", key="w_cidade")
+        st.text_input("Estado", key="w_estado")
+        st.selectbox("Rastreador", ["SIM","NAO"], key="w_rastreador")
 
-    with c1:
-        placa = st.text_input("Placa", key="placa")
-        marca = st.text_input("Marca", key="marca")
-        modelo = st.text_input("Modelo", key="modelo")
-        tipo = st.text_input("Tipo de Veículo", key="tipo")
+    with col4:
+        st.text_input("Data do cadastro", key="w_data")
 
-    with c2:
-        ano = st.text_input("Ano", key="ano")
-        motorista = st.text_input("Motorista", key="motorista")
-        curso = st.selectbox("Curso MOP", ["SIM","NAO"], key="curso")
-        indicacao = st.selectbox("Indicação", ["SIM","NAO"], key="indicacao")
+    colSave, colClear = st.columns(2)
+    send = colSave.form_submit_button("💾 SALVAR")
+    clear = colClear.form_submit_button("🧹 LIMPAR CAMPOS")
 
-    with c3:
-        telefone = st.text_input("Telefone", key="telefone")
-        cidade = st.text_input("Cidade", key="cidade")
-        estado = st.text_input("Estado", key="estado")
-        rastreador = st.selectbox("Rastreador", ["SIM","NAO"], key="rastreador")
-
-    with c4:
-        data = st.text_input("Data do cadastro", key="data")
-        tags = st.selectbox(
-            "Tags",
-            ["CONECT CAR","SEM PARAR","VELOE","MOVE MAIS"],
-            key="tags"
-        )
-        usuario = st.text_input("Usuário", key="usuario")
-
-    col1, col2 = st.columns(2)
-    salvar = col1.form_submit_button("💾 SALVAR")
-    limpar = col2.form_submit_button("🧹 LIMPAR CAMPOS")
-
-if limpar:
-    limpar_formulario()
+# --------------------------------------------
+# LIMPAR FORM
+# --------------------------------------------
+if clear:
+    st.session_state["do_clear"] = True
     st.rerun()
 
-if salvar:
+# --------------------------------------------
+# SALVAR NO BANCO
+# --------------------------------------------
+if send:
     try:
         conn = get_connection()
         cursor = conn.cursor()
 
-        cursor.execute("""
+        sql = """
             INSERT INTO parceiros_jwm
             (placa, marca, modelo, ano, tipo_veiculo, motorista,
              telefone, cidade, estado, rastreador,
-             curso_mop, data_cadastro, indicacao, tags, usuario)
-            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
-        """, (
-            norm(placa), norm(marca), norm(modelo), norm(ano),
-            norm(tipo), norm(motorista), norm(telefone),
-            norm(cidade), norm(estado), norm(rastreador),
-            norm(curso), norm(data), norm(indicacao),
-            norm(tags), norm(usuario)
-        ))
+             curso_mop, data_cadastro, indicacao)
+            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+        """
 
+        values = (
+            norm(st.session_state["w_placa"]),
+            norm(st.session_state["w_marca"]),
+            norm(st.session_state["w_modelo"]),
+            norm(st.session_state["w_ano"]),
+            norm(st.session_state["w_tipo"]),
+            norm(st.session_state["w_motorista"]),
+            norm(st.session_state["w_telefone"]),
+            norm(st.session_state["w_cidade"]),
+            norm(st.session_state["w_estado"]),
+            norm(st.session_state["w_rastreador"]),
+            norm(st.session_state["w_curso"]),
+            norm(st.session_state["w_data"]),
+            norm(st.session_state["w_indicacao"]),
+        )
+
+        cursor.execute(sql, values)
         conn.commit()
         cursor.close()
         conn.close()
 
-        st.success("✔ Registro salvo com sucesso!")
+        st.success("✔ Registro salvo no banco com sucesso!")
         st.cache_data.clear()
         st.rerun()
 
     except Exception as e:
-        st.error(f"❌ Erro ao salvar: {e}")
+        st.error(f"❌ Erro ao salvar no banco: {e}")

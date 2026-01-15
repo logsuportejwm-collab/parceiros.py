@@ -50,48 +50,59 @@ def autenticar(usuario, senha):
 if "logado" not in st.session_state:
     st.session_state.logado = False
 
+
 def tela_login():
-
-    # FUNDO GERAL (mantém limpo)
-    st.markdown("""
+    st.markdown(f"""
     <style>
-    .stApp {
-        background: radial-gradient(circle at top left, #0f2027, #000000);
-        background-attachment: fixed;
-    }
+    /* FUNDO DO LOGIN */
+    .stApp {{
+        background: url("fundo_login.png") no-repeat center center fixed;
+        background-size: cover;
+    }}
 
-    /* Container do login */
-    .login-box {
-        background: rgba(20, 20, 20, 0.85);
-        padding: 35px;
-        border-radius: 14px;
-        width: 420px;
-        box-shadow: 0 0 40px rgba(0,0,0,0.6);
-    }
+    /* CONTAINER DO LOGIN */
+    .login-box {{
+        position: absolute;
+        right: 8%;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 320px;
+        padding: 25px;
+        background: rgba(0, 0, 0, 0.65);
+        border-radius: 12px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.6);
+    }}
 
-    /* Alinhamento à direita */
-    .login-wrapper {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        height: 80vh;
-        padding-right: 8%;
-    }
+    /* TÍTULO */
+    .login-box h1 {{
+        font-size: 22px;
+        text-align: center;
+        margin-bottom: 20px;
+        color: white;
+    }}
 
-    /* Inputs */
-    input {
-        background-color: #2a2a2a !important;
-    }
+    /* INPUTS */
+    .login-box input {{
+        height: 38px;
+        font-size: 14px;
+    }}
+
+    /* BOTÃO */
+    .login-box button {{
+        width: 100%;
+        height: 40px;
+        font-size: 14px;
+        margin-top: 10px;
+    }}
     </style>
     """, unsafe_allow_html=True)
 
-    st.markdown('<div class="login-wrapper">', unsafe_allow_html=True)
     st.markdown('<div class="login-box">', unsafe_allow_html=True)
 
-    st.markdown("## 🔐 Login - Parceiros JWM")
+    st.markdown("<h1>🔐 Login - Parceiros JWM</h1>", unsafe_allow_html=True)
 
-    usuario = st.text_input("Usuário")
-    senha = st.text_input("Senha", type="password")
+    usuario = st.text_input("Usuário", key="login_usuario")
+    senha = st.text_input("Senha", type="password", key="login_senha")
 
     if st.button("Entrar"):
         if autenticar(usuario, senha):
@@ -102,11 +113,12 @@ def tela_login():
             st.error("❌ Usuário ou senha inválidos")
 
     st.markdown('</div>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+
 
 if not st.session_state.logado:
     tela_login()
     st.stop()
+
 # =========================================================
 # FUNDO DO APP 
 # =========================================================

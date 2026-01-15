@@ -8,7 +8,6 @@ import os
 # CONFIGURAÇÃO BASE (SEMPRE PRIMEIRO)
 # =========================================================
 PASTA_BASE = os.path.dirname(os.path.abspath(__file__))
-
 st.set_page_config(
     page_title="Parceiros JWM",
     layout="wide"
@@ -59,72 +58,37 @@ def tela_login():
         background-size: cover;
     }
 
-    /* REMOVE FUNDO / CAIXAS PADRÃO */
+    /* REMOVE QUALQUER CAIXA PRETA */
     section.main > div {
         background: transparent !important;
         box-shadow: none !important;
-        padding: 0 !important;
     }
 
-    /* CONTAINER DO LOGIN (ESQUERDA) */
-    .login-box {
-        width: 320px;
-        margin-left: 60px;
-        margin-top: 140px;
-    }
-
-    /* TÍTULO MENOR */
-    .login-box h1 {
-        font-size: 26px;
-        margin-bottom: 20px;
-    }
-
-    /* CONTROLA LARGURA REAL DOS INPUTS */
-    .login-box .stTextInput,
-    .login-box .stTextInput > div,
-    .login-box .stTextInput input {
-        width: 100% !important;
-        max-width: 320px !important;
-    }
-
-    /* INPUTS MENORES */
-    .login-box input {
-        height: 36px !important;
-        font-size: 14px !important;
-    }
-
-    /* LABELS */
-    .login-box label {
-        font-size: 13px !important;
-    }
-
-    /* BOTÃO MENOR */
-    .login-box button {
-        width: 120px;
-        height: 36px;
-        font-size: 14px;
-    }
+    /* AJUSTES VISUAIS */
+    label { font-size: 13px !important; }
+    input { height: 36px !important; font-size: 14px !important; }
+    button { height: 36px !important; font-size: 14px !important; }
     </style>
     """, unsafe_allow_html=True)
 
-    st.markdown('<div class="login-box">', unsafe_allow_html=True)
+    col_esq, col_centro, col_dir = st.columns([1.2, 4, 4])
 
-    st.title("🔐 Login - Parceiros JWM")
+    with col_esq:
+        st.markdown("<br><br><br>", unsafe_allow_html=True)
+        st.title("🔐 Login - Parceiros JWM")
 
-    usuario = st.text_input("Usuário")
-    senha = st.text_input("Senha", type="password")
+        usuario = st.text_input("Usuário")
+        senha = st.text_input("Senha", type="password")
 
-    if st.button("Entrar"):
-        if autenticar(usuario, senha):
-            st.session_state.logado = True
-            st.session_state.usuario = usuario
-            st.rerun()
-        else:
-            st.error("❌ Usuário ou senha inválidos")
+        if st.button("Entrar"):
+            if autenticar(usuario, senha):
+                st.session_state.logado = True
+                st.session_state.usuario = usuario
+                st.rerun()
+            else:
+                st.error("❌ Usuário ou senha inválidos")
 
-    st.markdown('</div>', unsafe_allow_html=True)
-
-# 👉 BLOQUEIA O APP SE NÃO ESTIVER LOGADO
+#  BLOQUEIA O APP SE NÃO ESTIVER LOGADO
 if not st.session_state.logado:
     tela_login()
     st.stop()

@@ -54,67 +54,58 @@ if "logado" not in st.session_state:
 # TELA LOGIN (FORÇADA À ESQUERDA)
 # =========================================================
 def tela_login():
-
     st.markdown("""
     <style>
-
-    /* REMOVE LIMITAÇÃO CENTRAL DO STREAMLIT */
-    .block-container {
-        padding-left: 0 !important;
-        padding-right: 0 !important;
-        max-width: 100% !important;
-    }
-
     /* FUNDO LOGIN */
     .stApp {
         background: url("fundo.png") no-repeat center center fixed;
         background-size: cover;
     }
 
-    /* REMOVE CAIXA PRETA */
+    /* REMOVE CONTAINERS PRETOS */
     section.main > div {
         background: transparent !important;
         box-shadow: none !important;
+        padding: 0 !important;
     }
 
-    /* LOGIN TOTALMENTE À ESQUERDA */
+    /* CAIXA LOGIN À ESQUERDA */
     .login-box {
-        width: 420px;
-        margin-left: 60px;
-        margin-top: 160px;
+        width: 320px;          /* ⬅️ MENOR */
+        margin-left: 60px;     /* mantém à esquerda */
+        margin-top: 120px;
     }
 
     /* TÍTULO */
     .login-box h1 {
-        font-size: 32px;
-        margin-bottom: 30px;
+        font-size: 24px;       /* ⬅️ MENOR */
+        margin-bottom: 18px;
+    }
+
+    /* LABELS */
+    .login-box label {
+        font-size: 12px !important;
     }
 
     /* INPUTS */
     .login-box input {
-        height: 44px !important;
-        font-size: 15px !important;
-    }
-
-    /* LABEL */
-    .login-box label {
-        font-size: 14px !important;
+        height: 34px !important;   /* ⬅️ MENOR */
+        font-size: 13px !important;
     }
 
     /* BOTÃO */
     .login-box button {
-        width: 140px;
-        height: 44px;
-        font-size: 15px;
+        width: 110px;
+        height: 34px;
+        font-size: 13px;
+        margin-top: 10px;
     }
-
     </style>
     """, unsafe_allow_html=True)
 
     st.markdown('<div class="login-box">', unsafe_allow_html=True)
 
     st.title("🔐 Login - Parceiros JWM")
-
     usuario = st.text_input("Usuário")
     senha = st.text_input("Senha", type="password")
 

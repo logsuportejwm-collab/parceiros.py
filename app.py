@@ -53,107 +53,106 @@ if "logado" not in st.session_state:
 # =========================================================
 # TELA LOGIN (FORÇADA À ESQUERDA)
 # =========================================================
+
 def tela_login():
+    st.markdown("""
+    <style>
 
-st.markdown("""
-<style>
+    /* ===== FULL SCREEN LAYOUT ===== */
+    .stApp {
+        background: #0f141c;
+    }
 
-/* ===== FULL SCREEN LAYOUT ===== */
-.stApp {
-    background: #0f141c;
-}
+    /* LADO DIREITO COM IMAGEM */
+    .login-bg {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 50%;
+        height: 100%;
+        background: url('fundo_login.jpg') no-repeat center center;
+        background-size: cover;
+        opacity: 0.28;
+    }
 
-/* LADO DIREITO COM IMAGEM */
-.login-bg {
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 50%;
-    height: 100%;
-    background: url('fundo_login.jpg') no-repeat center center;
-    background-size: cover;
-    opacity: 0.28;
-}
+    /* ===== CENTRALIZA A CAIXA ===== */
+    .login-container {
+        position: absolute;
+        top: 50%;
+        left: 25%;
+        transform: translate(-50%, -50%);
+        width: 380px;
+    }
 
-/* ===== CENTRALIZA A CAIXA ===== */
-.login-container {
-    position: absolute;
-    top: 50%;
-    left: 25%;
-    transform: translate(-50%, -50%);
-    width: 380px;
-}
+    /* ===== CAIXA ===== */
+    .login-box {
+        background: rgba(20, 25, 35, 0.92);
+        padding: 38px;
+        border-radius: 18px;
+        box-shadow: 0px 0px 22px rgba(0,0,0,0.4);
+    }
 
-/* ===== CAIXA ===== */
-.login-box {
-    background: rgba(20, 25, 35, 0.92);
-    padding: 38px;
-    border-radius: 18px;
-    box-shadow: 0px 0px 22px rgba(0,0,0,0.4);
-}
+    /* TÍTULO */
+    .login-title {
+        font-size: 30px;
+        color: #ffffff;
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
 
-/* TÍTULO */
-.login-title {
-    font-size: 30px;
-    color: #ffffff;
-    font-weight: 600;
-    margin-bottom: 20px;
-}
+    /* INPUTS */
+    div[data-testid="stTextInput"] input {
+        background-color: #10151e !important;
+        border: 2px solid #2c3e50 !important;
+        border-radius: 10px !important;
+        color: white !important;
+        padding: 10px !important;
+    }
 
-/* INPUTS */
-div[data-testid="stTextInput"] input {
-    background-color: #10151e !important;
-    border: 2px solid #2c3e50 !important;
-    border-radius: 10px !important;
-    color: white !important;
-    padding: 10px !important;
-}
+    div[data-testid="stTextInput"] input:focus {
+        border: 2px solid #3fa9f5 !important;
+    }
 
-div[data-testid="stTextInput"] input:focus {
-    border: 2px solid #3fa9f5 !important;
-}
+    /* BOTÃO */
+    .stButton button {
+        width: 100%;
+        padding: 10px;
+        background: linear-gradient(90deg,#007bff, #00c6ff);
+        border: none;
+        border-radius: 10px;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        transition: 0.3s;
+    }
 
-/* BOTÃO */
-.stButton button {
-    width: 100%;
-    padding: 10px;
-    background: linear-gradient(90deg,#007bff, #00c6ff);
-    border: none;
-    border-radius: 10px;
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-    transition: 0.3s;
-}
+    .stButton button:hover {
+        transform: scale(1.03);
+        background: linear-gradient(90deg,#0a84ff, #3fc9ff);
+    }
 
-.stButton button:hover {
-    transform: scale(1.03);
-    background: linear-gradient(90deg,#0a84ff, #3fc9ff);
-}
+    </style>
 
-</style>
-<div class="login-bg"></div>
-""", unsafe_allow_html=True)
-``
+    <div class="login-bg"></div>
+    """, unsafe_allow_html=True)
 
+    st.markdown('<div class="login-container"><div class="login-box">', unsafe_allow_html=True)
 
-st.markdown('<div class="login-container"><div class="login-box">', unsafe_allow_html=True)
+    st.markdown('<div class="login-title">🔐 Login - Parceiros JWM</div>', unsafe_allow_html=True)
 
-st.markdown('<div class="login-title">🔐 Login - Parceiros JWM</div>', unsafe_allow_html=True)
+    usuario = st.text_input("Usuário")
+    senha = st.text_input("Senha", type="password")
 
-usuario = st.text_input("Usuário")
-senha = st.text_input("Senha", type="password")
+    if st.button("Entrar"):
+        if autenticar(usuario, senha):
+            st.session_state.logado = True
+            st.session_state.usuario = usuario
+            st.rerun()
+        else:
+            st.error("❌ Usuário ou senha inválidos")
 
-if st.button("Entrar"):
-    if autenticar(usuario, senha):
-        st.session_state.logado = True
-        st.session_state.usuario = usuario
-        st.rerun()
-    else:
-        st.error("❌ Usuário ou senha inválidos")
+    st.markdown('</div></div>', unsafe_allow_html=True)
 
-st.markdown('</div></div>', unsafe_allow_html=True)
-`` 
 # =========================================================
 # BLOQUEIA APP SEM LOGIN
 # =========================================================

@@ -14,7 +14,7 @@ st.set_page_config(
 )
 
 # =========================================================
-# FUNÇÃO CONEXÃO MYSQL
+# CONEXÃO MYSQL
 # =========================================================
 def get_connection():
     return mysql.connector.connect(
@@ -26,7 +26,7 @@ def get_connection():
     )
 
 # =========================================================
-# FUNÇÃO AUTENTICAÇÃO
+# AUTENTICAÇÃO
 # =========================================================
 def autenticar(usuario, senha):
     conn = get_connection()
@@ -44,58 +44,59 @@ def autenticar(usuario, senha):
     return ok
 
 # =========================================================
-# CONTROLE DE LOGIN
+# CONTROLE LOGIN
 # =========================================================
 if "logado" not in st.session_state:
     st.session_state.logado = False
 
+# =========================================================
+# TELA DE LOGIN
+# =========================================================
 def tela_login():
     st.markdown("""
     <style>
-    /* FUNDO DO LOGIN */
+    /* FUNDO LOGIN */
     .stApp {
         background: url("fundo.png") no-repeat center center fixed;
         background-size: cover;
     }
 
-    /* REMOVE CAIXAS PADRÃO */
+    /* REMOVE CONTAINERS PRETOS */
     section.main > div {
         background: transparent !important;
         box-shadow: none !important;
         padding: 0 !important;
     }
 
-    /* CONTAINER LOGIN */
+    /* CAIXA LOGIN À ESQUERDA */
     .login-box {
         width: 380px;
         margin-left: 70px;
-        margin-top: 150px;
+        margin-top: 140px;
     }
 
     /* TÍTULO */
     .login-box h1 {
         font-size: 30px;
-        margin-bottom: 22px;
-        white-space: normal;
+        margin-bottom: 24px;
     }
 
-    /* LABEL */
-    .login-box label {
-        font-size: 14px !important;
-    }
-
-    /* INPUT */
+    /* INPUTS */
     .login-box input {
         height: 42px !important;
         font-size: 15px !important;
     }
 
+    /* LABELS */
+    .login-box label {
+        font-size: 14px !important;
+    }
+
     /* BOTÃO */
     .login-box button {
-        width: 140px;
-        height: 40px;
+        width: 130px;
+        height: 42px;
         font-size: 15px;
-        margin-top: 10px;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -117,11 +118,12 @@ def tela_login():
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-# 🔒 BLOQUEIA APP SEM LOGIN
+# =========================================================
+# BLOQUEIA APP SEM LOGIN
+# =========================================================
 if not st.session_state.logado:
     tela_login()
     st.stop()
-
 # =========================================================
 # FUNDO DO APP 
 # =========================================================

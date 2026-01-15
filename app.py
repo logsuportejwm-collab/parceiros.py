@@ -54,66 +54,93 @@ if "logado" not in st.session_state:
 # TELA LOGIN (FORÇADA À ESQUERDA)
 # =========================================================
 def tela_login():
-   st.markdown("""
+
+st.markdown("""
 <style>
 
-/* ===== FUNDO ===== */
+/* ===== FULL SCREEN LAYOUT ===== */
 .stApp {
-    background: url("fundo.png") no-repeat center center fixed;
+    background: #0f141c;
+}
+
+/* LADO DIREITO COM IMAGEM */
+.login-bg {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    background: url('fundo_login.jpg') no-repeat center center;
     background-size: cover;
+    opacity: 0.28;
 }
 
-/* ===== REMOVE CENTRALIZAÇÃO DO STREAMLIT ===== */
-section.main > div {
-    max-width: 100% !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
+/* ===== CENTRALIZA A CAIXA ===== */
+.login-container {
+    position: absolute;
+    top: 50%;
+    left: 25%;
+    transform: translate(-50%, -50%);
+    width: 380px;
 }
 
-/* ===== CAIXA DE LOGIN ===== */
+/* ===== CAIXA ===== */
 .login-box {
-    width: 340px;
-    margin-left: 60px;
-    margin-top: 110px;
+    background: rgba(20, 25, 35, 0.92);
+    padding: 38px;
+    border-radius: 18px;
+    box-shadow: 0px 0px 22px rgba(0,0,0,0.4);
 }
 
-/* ===== TÍTULO ===== */
-.login-box h1 {
-    font-size: 26px;
-    margin-bottom: 18px;
+/* TÍTULO */
+.login-title {
+    font-size: 30px;
+    color: #ffffff;
+    font-weight: 600;
+    margin-bottom: 20px;
 }
 
-/* ===== LABELS ===== */
-.login-box label {
-    font-size: 13px !important;
+/* INPUTS */
+div[data-testid="stTextInput"] input {
+    background-color: #10151e !important;
+    border: 2px solid #2c3e50 !important;
+    border-radius: 10px !important;
+    color: white !important;
+    padding: 10px !important;
 }
 
-/* ===== INPUTS ===== */
-.login-box input {
-    height: 38px !important;
-    font-size: 14px !important;
+div[data-testid="stTextInput"] input:focus {
+    border: 2px solid #3fa9f5 !important;
 }
 
-/* ===== BOTÃO ===== */
-.login-box button {
-    width: 120px;
-    height: 38px;
-    font-size: 14px;
+/* BOTÃO */
+.stButton button {
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(90deg,#007bff, #00c6ff);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    transition: 0.3s;
 }
 
-/* ===== REMOVE SOMBRAS E FUNDOS ===== */
-div[data-testid="stForm"],
-div[data-testid="stVerticalBlock"] {
-    background: transparent !important;
-    box-shadow: none !important;
+.stButton button:hover {
+    transform: scale(1.03);
+    background: linear-gradient(90deg,#0a84ff, #3fc9ff);
 }
 
 </style>
+<div class="login-bg"></div>
 """, unsafe_allow_html=True)
+``
 
-st.markdown('<div class="login-box">', unsafe_allow_html=True)
 
-st.title("🔐 Login - Parceiros JWM")
+st.markdown('<div class="login-container"><div class="login-box">', unsafe_allow_html=True)
+
+st.markdown('<div class="login-title">🔐 Login - Parceiros JWM</div>', unsafe_allow_html=True)
+
 usuario = st.text_input("Usuário")
 senha = st.text_input("Senha", type="password")
 
@@ -125,8 +152,8 @@ if st.button("Entrar"):
     else:
         st.error("❌ Usuário ou senha inválidos")
 
-st.markdown('</div>', unsafe_allow_html=True)
-   
+st.markdown('</div></div>', unsafe_allow_html=True)
+`` 
 # =========================================================
 # BLOQUEIA APP SEM LOGIN
 # =========================================================

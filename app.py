@@ -54,7 +54,6 @@ if "logado" not in st.session_state:
 def tela_login():
     st.markdown("""
     <style>
-
     /* FUNDO COM IMAGEM */
     .stApp {
         background: url("fundo.png") no-repeat center center fixed;
@@ -69,7 +68,7 @@ def tela_login():
         box-shadow: none !important;
     }
 
-    /* POSICIONA LOGIN À ESQUERDA */
+    /* LOGIN À ESQUERDA */
     .login-box {
         width: 320px;
         margin-left: 60px;
@@ -81,13 +80,11 @@ def tela_login():
         height: 38px !important;
         font-size: 14px !important;
     }
-
     button {
         width: 120px;
         height: 38px;
         font-size: 14px;
     }
-
     </style>
     """, unsafe_allow_html=True)
 
@@ -106,6 +103,15 @@ def tela_login():
             st.error("❌ Usuário ou senha inválidos")
 
     st.markdown('</div>', unsafe_allow_html=True)
+
+
+# =========================================================
+# 🔒 BLOQUEIA O APP ATÉ LOGAR (ESSENCIAL)
+# =========================================================
+if not st.session_state.logado:
+    tela_login()
+    st.stop()
+
 
 # =========================================================
 # FUNDO DO APP 

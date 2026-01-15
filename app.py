@@ -53,20 +53,20 @@ if "logado" not in st.session_state:
 def tela_login():
     st.markdown("""
     <style>
-    /* FUNDO LOGIN */
+    /* FUNDO SOMENTE DO LOGIN */
     .stApp {
         background: url("fundo.png") no-repeat center center fixed;
         background-size: cover;
     }
 
-    /* REMOVE CONTAINERS PADRÃO */
+    /* REMOVE FUNDO / CAIXAS PADRÃO */
     section.main > div {
         background: transparent !important;
         box-shadow: none !important;
         padding: 0 !important;
     }
 
-    /* CAIXA LOGIN À ESQUERDA */
+    /* CONTAINER DO LOGIN (ESQUERDA) */
     .login-box {
         width: 320px;
         margin-left: 60px;
@@ -79,19 +79,28 @@ def tela_login():
         margin-bottom: 20px;
     }
 
+    /* CONTROLA LARGURA REAL DOS INPUTS */
+    .login-box .stTextInput,
+    .login-box .stTextInput > div,
+    .login-box .stTextInput input {
+        width: 100% !important;
+        max-width: 320px !important;
+    }
+
     /* INPUTS MENORES */
-    input {
+    .login-box input {
         height: 36px !important;
         font-size: 14px !important;
     }
 
-    label {
+    /* LABELS */
+    .login-box label {
         font-size: 13px !important;
     }
 
     /* BOTÃO MENOR */
-    button {
-        width: 110px;
+    .login-box button {
+        width: 120px;
         height: 36px;
         font-size: 14px;
     }
@@ -101,6 +110,7 @@ def tela_login():
     st.markdown('<div class="login-box">', unsafe_allow_html=True)
 
     st.title("🔐 Login - Parceiros JWM")
+
     usuario = st.text_input("Usuário")
     senha = st.text_input("Senha", type="password")
 

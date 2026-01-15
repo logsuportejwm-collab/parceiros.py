@@ -8,6 +8,7 @@ import os
 # CONFIGURAÇÃO BASE
 # =========================================================
 PASTA_BASE = os.path.dirname(os.path.abspath(__file__))
+
 st.set_page_config(
     page_title="Parceiros JWM",
     layout="wide"
@@ -50,54 +51,63 @@ if "logado" not in st.session_state:
     st.session_state.logado = False
 
 # =========================================================
-# TELA DE LOGIN
+# TELA LOGIN (FORÇADA À ESQUERDA)
 # =========================================================
 def tela_login():
+
     st.markdown("""
     <style>
+
+    /* REMOVE LIMITAÇÃO CENTRAL DO STREAMLIT */
+    .block-container {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        max-width: 100% !important;
+    }
+
     /* FUNDO LOGIN */
     .stApp {
         background: url("fundo.png") no-repeat center center fixed;
         background-size: cover;
     }
 
-    /* REMOVE CONTAINERS PRETOS */
+    /* REMOVE CAIXA PRETA */
     section.main > div {
         background: transparent !important;
         box-shadow: none !important;
-        padding: 0 !important;
     }
 
-    /* CAIXA LOGIN À ESQUERDA */
+    /* LOGIN TOTALMENTE À ESQUERDA */
     .login-box {
-        width: 380px;
-        margin-left: 70px;
-        margin-top: 140px;
+        width: 420px;
+        margin-left: 60px;
+        margin-top: 160px;
     }
 
     /* TÍTULO */
     .login-box h1 {
-        font-size: 30px;
-        margin-bottom: 24px;
+        font-size: 32px;
+        margin-bottom: 30px;
     }
 
     /* INPUTS */
     .login-box input {
-        height: 42px !important;
+        height: 44px !important;
         font-size: 15px !important;
     }
 
-    /* LABELS */
+    /* LABEL */
     .login-box label {
         font-size: 14px !important;
     }
 
     /* BOTÃO */
     .login-box button {
-        width: 130px;
-        height: 42px;
+        width: 140px;
+        height: 44px;
         font-size: 15px;
     }
+
     </style>
     """, unsafe_allow_html=True)
 
@@ -124,6 +134,7 @@ def tela_login():
 if not st.session_state.logado:
     tela_login()
     st.stop()
+
 # =========================================================
 # FUNDO DO APP 
 # =========================================================

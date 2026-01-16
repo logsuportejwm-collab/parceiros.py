@@ -52,25 +52,19 @@ if "logado" not in st.session_state:
     st.session_state.logado = False
 
 # =========================================================
-# TELA LOGIN (ALINHADA À ESQUERDA E SEM SOMBRAS)
+# TELA LOGIN
 # =========================================================
-
 def tela_login():
 
     IMAGEM_LOGIN = os.path.join(PASTA_BASE, "fundo_login.png")
-
-    if os.path.exists(IMAGEM_LOGIN):
-        bg_url = IMAGEM_LOGIN.replace("\\", "/")
-    else:
-        bg_url = ""
+    bg_url = IMAGEM_LOGIN.replace("\\", "/") if os.path.exists(IMAGEM_LOGIN) else ""
 
     st.markdown(f"""
     <style>
-    /* FUNDO LOGIN */
+    /* FUNDO */
     .stApp {{
         background:
-            linear-gradient(
-                to left,
+            linear-gradient(to left,
                 rgba(13,17,23,0.95),
                 rgba(13,17,23,0.75),
                 rgba(13,17,23,0.25)
@@ -80,18 +74,64 @@ def tela_login():
         background-position: center;
     }}
 
-    /* REMOVE BLOCO VAZIO ACIMA DO LOGIN */
+    /* REMOVE FAIXA INVISÍVEL */
     section[data-testid="stVerticalBlock"] > div:first-child {{
         display: none !important;
     }}
 
+    /* CARD LOGIN */
     .login-card {{
         margin-top: 25vh;
-        margin-left: 6vw;
-        width: 340px;
-        padding: 28px;
-        background: rgba(22,27,34,0.96);
-        border-radius: 18px;
+        margin-left: 5vw;
+        width: 300px;
+        padding: 22px;
+        background: rgba(22,27,34,0.97);
+        border-radius: 16px;
+    }}
+
+    /* TÍTULOS */
+    .login-title {{
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 4px;
+    }}
+
+    .login-sub {{
+        font-size: 13px;
+        opacity: 0.75;
+        margin-bottom: 16px;
+    }}
+
+    /* INPUTS MENORES E À ESQUERDA */
+    div[data-baseweb="input"] {{
+        max-width: 260px !important;
+    }}
+
+    input {{
+        height: 38px !important;
+        font-size: 14px !important;
+        padding: 6px 10px !important;
+        background: #1f242d !important;
+        border-radius: 8px !important;
+        border: 1px solid #2d333b !important;
+        box-shadow: none !important;
+    }}
+
+    /* BOTÃO AZUL */
+    button[kind="primary"] {{
+        margin-top: 6px;
+        width: 140px !important;
+        height: 40px !important;
+        background: linear-gradient(135deg,#1f6feb,#388bfd) !important;
+        color: white !important;
+        border-radius: 10px !important;
+        font-weight: 600 !important;
+        border: none !important;
+        box-shadow: none !important;
+    }}
+
+    button[kind="primary"]:hover {{
+        background: linear-gradient(135deg,#388bfd,#1f6feb) !important;
     }}
     </style>
     """, unsafe_allow_html=True)
@@ -103,7 +143,7 @@ def tela_login():
 
     usuario = st.text_input("👤 Usuário")
     senha = st.text_input("🔑 Senha", type="password")
-    entrar = st.button("🚀 Entrar")
+    entrar = st.button("🚀 Entrar", type="primary")
 
     if entrar:
         if autenticar(usuario, senha):
@@ -115,16 +155,15 @@ def tela_login():
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-
 # =========================================================
-# BLOQUEIA APP SEM LOGIN
+# BLOQUEIO SEM LOGIN
 # =========================================================
 if not st.session_state.logado:
     tela_login()
     st.stop()
 
 # =========================================================
-# FUNDO DO APP (pós-login)
+# FUNDO PÓS LOGIN
 # =========================================================
 st.markdown("""
 <style>
@@ -151,6 +190,7 @@ with colB:
         st.image(os.path.join(PASTA_BASE, "mapinha.png"), use_container_width=True)
 
 st.markdown("---")
+
 
 # =========================================================
 # FUNÇÕES AUXILIARES

@@ -54,39 +54,30 @@ if "logado" not in st.session_state:
 # =========================================================
 # TELA LOGIN (ALINHADA À ESQUERDA E SEM SOMBRAS)
 # =========================================================
+
 def tela_login():
 
     IMAGEM_LOGIN = os.path.join(PASTA_BASE, "fundo_login.png")
-
-    if not os.path.exists(IMAGEM_LOGIN):
-        IMAGEM_LOGIN = ""
-
-    bg_url = IMAGEM_LOGIN.replace("\\", "/")
+    bg_url = IMAGEM_LOGIN.replace("\\", "/") if os.path.exists(IMAGEM_LOGIN) else ""
 
     st.markdown(f"""
     <style>
-    /* ===============================
-       FUNDO GERAL
-       =============================== */
+    /* FUNDO */
     .stApp {{
         background-color: #0d1117;
         position: relative;
         overflow: hidden;
     }}
 
-    /* IMAGEM DO LADO DIREITO */
     .stApp::before {{
         content: "";
         position: fixed;
-        top: 0;
-        right: 0;
-        width: 65%;
-        height: 100vh;
+        inset: 0;
         background:
             linear-gradient(
                 to left,
-                rgba(13,17,23,0.95),
-                rgba(13,17,23,0.7),
+                rgba(13,17,23,0.92),
+                rgba(13,17,23,0.75),
                 rgba(13,17,23,0.25)
             ),
             url("{bg_url}");
@@ -95,45 +86,39 @@ def tela_login():
         z-index: 0;
     }}
 
-    /* ===============================
-       CARD LOGIN (ESQUERDA)
-       =============================== */
+    /* CARD LOGIN */
     .login-card {{
         position: fixed;
         top: 50%;
         left: 6vw;
         transform: translateY(-50%);
-        width: 330px;
+        width: 340px;
         padding: 28px;
-        background: #161b22;
+        background: rgba(22,27,34,0.95);
         border-radius: 18px;
-        border: 1px solid rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.08);
         z-index: 2;
+    }}
+
+    .login-card * {{
+        position: relative;
+        z-index: 3;
     }}
 
     .login-title {{
         font-size: 26px;
         font-weight: 700;
-        color: white;
-        margin-bottom: 4px;
+        color: #ffffff;
+        margin-bottom: 6px;
     }}
 
     .login-sub {{
         font-size: 13px;
         color: #9aa4b2;
-        margin-bottom: 22px;
+        margin-bottom: 20px;
     }}
 
-    /* ===============================
-       INPUTS
-       =============================== */
-    div[data-testid="stTextInput"] > div {{
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-        padding: 0 !important;
-    }}
-
+    /* INPUTS */
     div[data-testid="stTextInput"] input {{
         height: 38px !important;
         font-size: 13px !important;
@@ -141,49 +126,32 @@ def tela_login():
         border: 1px solid #30363d !important;
         border-radius: 8px !important;
         color: white !important;
-        padding: 6px 10px !important;
     }}
 
-    div[data-testid="stTextInput"] input:focus {{
-        border-color: #3da0ff !important;
-        box-shadow: 0 0 0 1px rgba(61,160,255,0.35) !important;
-    }}
-
-    /* ===============================
-       BOTÃO
-       =============================== */
+    /* BOTÃO */
     .stButton > button {{
         width: 100%;
         height: 38px;
         font-size: 13px;
         font-weight: 600;
-        color: #ffffff;
+        color: white;
         background: linear-gradient(90deg,#007bff,#3da0ff);
-        border: none;
         border-radius: 8px;
-        margin-top: 10px;
-    }}
-
-    .stButton > button:hover {{
-        filter: brightness(1.08);
-        transform: translateY(-1px);
+        border: none;
+        margin-top: 12px;
     }}
     </style>
     """, unsafe_allow_html=True)
 
     st.markdown('<div class="login-card">', unsafe_allow_html=True)
 
-    # 🔐 Emoji incluso
     st.markdown('<div class="login-title">🔐 Login</div>', unsafe_allow_html=True)
-    st.markdown(
-        '<div class="login-sub">Acesse com seu usuário e senha</div>',
-        unsafe_allow_html=True
-    )
+    st.markdown('<div class="login-sub">Acesse com seu usuário e senha</div>', unsafe_allow_html=True)
 
-    with st.form("login_form"):
+    with st.container():
         usuario = st.text_input("👤 Usuário")
         senha = st.text_input("🔑 Senha", type="password")
-        entrar = st.form_submit_button("Entrar")
+        entrar = st.button("🚀 Entrar")
 
     if entrar:
         if autenticar(usuario, senha):

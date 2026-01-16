@@ -54,96 +54,98 @@ if "logado" not in st.session_state:
 # TELA LOGIN (FORÇADA À ESQUERDA)
 # =========================================================
 
+
 def tela_login():
+    # CSS do login (compacto e alinhado à esquerda)
     st.markdown("""
     <style>
-
-    /* ===== FULL SCREEN LAYOUT ===== */
     .stApp {
-        background: #0f141c;
+        background: radial-gradient(65% 120% at 0% 50%, #0e1624 0%, #0b1220 40%, #0a1120 100%);
     }
-
-    /* LADO DIREITO COM IMAGEM */
-    .login-bg {
-        position: fixed;
-        top: 0;
-        right: 0;
-        width: 50%;
-        height: 100%;
-        background: url('fundo_login.jpg') no-repeat center center;
-        background-size: cover;
-        opacity: 0.28;
-    }
-
-    /* ===== CENTRALIZA A CAIXA ===== */
     .login-container {
-        position: absolute;
+        position: fixed;
         top: 50%;
-        left: 25%;
-        transform: translate(-50%, -50%);
-        width: 380px;
+        left: 8vw;                 /* ajusta a posição mais à esquerda */
+        transform: translateY(-50%);
+        width: 320px;              /* caixa menor */
+        z-index: 10;
     }
-
-    /* ===== CAIXA ===== */
     .login-box {
-        background: rgba(20, 25, 35, 0.92);
-        padding: 38px;
-        border-radius: 18px;
-        box-shadow: 0px 0px 22px rgba(0,0,0,0.4);
+        background: rgba(14, 22, 36, 0.92);
+        padding: 22px;             /* padding menor */
+        border-radius: 14px;
+        box-shadow: 0 10px 28px rgba(0,0,0,0.35);
+        border: 1px solid rgba(255,255,255,0.06);
     }
-
-    /* TÍTULO */
     .login-title {
-        font-size: 30px;
-        color: #ffffff;
+        font-size: 22px;
+        color: #e9edf5;
         font-weight: 600;
-        margin-bottom: 20px;
+        margin: 0 0 12px 0;
+        letter-spacing: 0.2px;
     }
-
-    /* INPUTS */
+    label, .stTextInput label, .stPassword label {
+        font-size: 12px !important;
+        color: #cbd6e2 !important;
+        margin-bottom: 4px !important;
+    }
     div[data-testid="stTextInput"] input {
-        background-color: #10151e !important;
-        border: 2px solid #2c3e50 !important;
+        background-color: #0b1320 !important;
+        height: 34px !important;
+        font-size: 13px !important;
+        color: #e5eefc !important;
+        border: 1.5px solid #263448 !important;
         border-radius: 10px !important;
-        color: white !important;
-        padding: 10px !important;
+        padding: 6px 10px !important;
     }
-
     div[data-testid="stTextInput"] input:focus {
-        border: 2px solid #3fa9f5 !important;
+        border-color: #2f89ff !important;
+        box-shadow: 0 0 0 2px rgba(47,137,255,0.15) !important;
     }
-
-    /* BOTÃO */
+    .login-box .block-container > div,
+    .login-box div[data-testid="stTextInput"] {
+        margin-bottom: 10px;
+    }
     .stButton button {
-        width: 100%;
-        padding: 10px;
-        background: linear-gradient(90deg,#007bff, #00c6ff);
+        width: 120px;              /* botão menor */
+        height: 34px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #ffffff;
+        background: linear-gradient(90deg, #0a84ff, #35b8ff);
         border: none;
         border-radius: 10px;
-        color: white;
-        font-size: 16px;
-        font-weight: bold;
-        transition: 0.3s;
+        transition: transform .15s ease, filter .15s ease;
     }
-
     .stButton button:hover {
-        transform: scale(1.03);
-        background: linear-gradient(90deg,#0a84ff, #3fc9ff);
+        transform: translateY(-1px);
+        filter: brightness(1.05);
     }
+    footer {visibility: hidden;}
+    #MainMenu {visibility: hidden;}
 
+    /* Responsivo: em telas estreitas, centraliza */
+    @media (max-width: 768px) {
+        .login-container {
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 92vw;
+            max-width: 360px;
+        }
+    }
     </style>
-
-    <div class="login-bg"></div>
     """, unsafe_allow_html=True)
 
     st.markdown('<div class="login-container"><div class="login-box">', unsafe_allow_html=True)
-
     st.markdown('<div class="login-title">🔐 Login - Parceiros JWM</div>', unsafe_allow_html=True)
 
-    usuario = st.text_input("Usuário")
-    senha = st.text_input("Senha", type="password")
+    with st.form("form_login", clear_on_submit=False):
+        usuario = st.text_input("Usuário")
+        senha = st.text_input("Senha", type="password")
+        col_btn, _ = st.columns([1, 3])
+        entrar = col_btn.form_submit_button("Entrar")
 
-    if st.button("Entrar"):
+    if entrar:
         if autenticar(usuario, senha):
             st.session_state.logado = True
             st.session_state.usuario = usuario
@@ -152,6 +154,7 @@ def tela_login():
             st.error("❌ Usuário ou senha inválidos")
 
     st.markdown('</div></div>', unsafe_allow_html=True)
+
 
 # =========================================================
 # BLOQUEIA APP SEM LOGIN

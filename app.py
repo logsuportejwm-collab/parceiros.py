@@ -58,109 +58,105 @@ def tela_login():
     IMAGEM_LOGIN = os.path.join(PASTA_BASE, "fundo_login.png")
     bg_url = IMAGEM_LOGIN.replace("\\", "/") if os.path.exists(IMAGEM_LOGIN) else ""
 
-    st.markdown(f"""
-    <style>
+st.markdown(f"""
+<style>
 
-    /* =========================
-       REMOVE QUALQUER BLOCO FANTASMA
-    ========================== */
-    section[data-testid="stVerticalBlock"] {{
-        padding-top: 0 !important;
-        margin-top: 0 !important;
-    }}
+/* =========================
+   REMOVE BLOCO FANTASMA DO TOPO
+========================= */
+section[data-testid="stVerticalBlock"]:first-of-type > div {{
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}}
 
-    section[data-testid="stVerticalBlock"] > div {{
-        background: transparent !important;
-        box-shadow: none !important;
-        border: none !important;
-    }}
+section[data-testid="stVerticalBlock"] > div:has(div:empty) {{
+    display: none !important;
+}}
 
-    div[data-testid="stVerticalBlock"] > div:empty {{
-        display: none !important;
-    }}
+/* =========================
+   BODY / FUNDO
+========================= */
+.stApp {{
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 5vw;
 
-    /* =========================
-       BODY / FUNDO
-    ========================== */
-    .stApp {{
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        padding-left: 5vw;
+    background:
+        linear-gradient(to left,
+            rgba(13,17,23,0.95),
+            rgba(13,17,23,0.75),
+            rgba(13,17,23,0.25)
+        ),
+        url("{bg_url}");
+    background-size: cover;
+    background-position: center;
+}}
 
-        background:
-            linear-gradient(to left,
-                rgba(13,17,23,0.95),
-                rgba(13,17,23,0.75),
-                rgba(13,17,23,0.25)
-            ),
-            url("{bg_url}");
-        background-size: cover;
-        background-position: center;
-    }}
+/* =========================
+   CARD LOGIN
+========================= */
+.login-card {{
+    width: 420px;
+    padding: 32px;
+    background: rgba(22,27,34,0.97);
+    border-radius: 20px;
+    box-shadow: none !important;
+}}
 
-    /* =========================
-       CARD LOGIN
-    ========================== */
-    .login-card {{
-        width: 420px;
-        padding: 32px;
-        background: rgba(22,27,34,0.97);
-        border-radius: 20px;
-        box-shadow: none !important;
-    }}
+/* =========================
+   TEXTOS
+========================= */
+.login-title {{
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}}
 
-    /* =========================
-       TEXTOS
-    ========================== */
-    .login-title {{
-        font-size: 24px;
-        font-weight: 700;
-        margin-bottom: 4px;
-    }}
+.login-sub {{
+    font-size: 15px;
+    opacity: 0.75;
+    margin-bottom: 20px;
+}}
 
-    .login-sub {{
-        font-size: 15px;
-        opacity: 0.75;
-        margin-bottom: 20px;
-    }}
+/* =========================
+   INPUTS
+========================= */
+div[data-baseweb="input"] {{
+    width: 100% !important;
+}}
 
-    /* =========================
-       INPUTS GRANDES (DE VERDADE)
-    ========================== */
-    div[data-baseweb="input"] {{
-        width: 100% !important;
-        max-width: 100% !important;
-    }}
+input {{
+    height: 50px !important;
+    font-size: 16px !important;
+    padding: 12px 14px !important;
+    background: #1f242d !important;
+    border-radius: 12px !important;
+    border: 1px solid #2d333b !important;
+    box-shadow: none !important;
+}}
 
-    input {{
-        height: 50px !important;
-        font-size: 16px !important;
-        padding: 12px 14px !important;
-        background: #1f242d !important;
-        border-radius: 12px !important;
-        border: 1px solid #2d333b !important;
-        box-shadow: none !important;
-    }}
+/* =========================
+   BOTÃO
+========================= */
+button[kind="primary"] {{
+    width: 100% !important;
+    height: 48px !important;
+    margin-top: 14px;
+    background: linear-gradient(135deg,#1f6feb,#388bfd) !important;
+    color: white !important;
+    border-radius: 14px !important;
+    font-weight: 600 !important;
+    border: none !important;
+    box-shadow: none !important;
+}}
 
-    /* =========================
-       BOTÃO
-    ========================== */
-    button[kind="primary"] {{
-        width: 100% !important;
-        height: 48px !important;
-        margin-top: 14px;
-        background: linear-gradient(135deg,#1f6feb,#388bfd) !important;
-        color: white !important;
-        border-radius: 14px !important;
-        font-weight: 600 !important;
-        border: none !important;
-        box-shadow: none !important;
-    }}
-
-    </style>
-    """, unsafe_allow_html=True)
+</style>
+""", unsafe_allow_html=True)
 
     st.markdown('<div class="login-card">', unsafe_allow_html=True)
 

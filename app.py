@@ -56,59 +56,49 @@ if "logado" not in st.session_state:
 # =========================================================
 
 def tela_login():
+    import os
+    import streamlit as st
 
     IMAGEM_LOGIN = os.path.join(PASTA_BASE, "fundo_login.png")
-    bg_url = IMAGEM_LOGIN.replace("\\", "/") if os.path.exists(IMAGEM_LOGIN) else ""
+
+    if os.path.exists(IMAGEM_LOGIN):
+        bg_url = IMAGEM_LOGIN.replace("\\", "/")
+    else:
+        bg_url = ""
 
     st.markdown(f"""
     <style>
     /* ===============================
-       FUNDO GERAL
+       FUNDO DA APLICAÇÃO (SEM ::before)
        =============================== */
     .stApp {{
-        background-color: #0d1117;
-        position: relative;
-        overflow: hidden;
-    }}
-
-    /* FUNDO COM IMAGEM */
-    .stApp::before {{
-        content: "";
-        position: fixed;
-        inset: 0;
         background:
             linear-gradient(
                 to left,
-                rgba(13,17,23,0.92),
+                rgba(13,17,23,0.95),
                 rgba(13,17,23,0.75),
                 rgba(13,17,23,0.25)
             ),
             url("{bg_url}");
         background-size: cover;
         background-position: center;
-        z-index: 0;
-        pointer-events: none; /* 🔑 ESSENCIAL */
+        background-attachment: fixed;
     }}
+
+    /* REMOVE HEADER STREAMLIT */
+    header {{visibility: hidden;}}
 
     /* ===============================
        CARD LOGIN
        =============================== */
     .login-card {{
-        position: fixed;
-        top: 50%;
-        left: 6vw;
-        transform: translateY(-50%);
+        margin-top: 25vh;
+        margin-left: 6vw;
         width: 340px;
         padding: 28px;
         background: rgba(22,27,34,0.96);
         border-radius: 18px;
         border: 1px solid rgba(255,255,255,0.08);
-        z-index: 10;
-    }}
-
-    .login-card * {{
-        position: relative;
-        z-index: 11;
     }}
 
     .login-title {{
@@ -124,9 +114,7 @@ def tela_login():
         margin-bottom: 20px;
     }}
 
-    /* ===============================
-       INPUTS
-       =============================== */
+    /* INPUTS */
     div[data-testid="stTextInput"] input {{
         height: 38px !important;
         font-size: 13px !important;
@@ -136,9 +124,7 @@ def tela_login():
         color: white !important;
     }}
 
-    /* ===============================
-       BOTÃO
-       =============================== */
+    /* BOTÃO */
     .stButton > button {{
         width: 100%;
         height: 38px;
@@ -150,25 +136,16 @@ def tela_login():
         border: none;
         margin-top: 12px;
     }}
-
-    .stButton > button:hover {{
-        filter: brightness(1.08);
-    }}
     </style>
     """, unsafe_allow_html=True)
 
     st.markdown('<div class="login-card">', unsafe_allow_html=True)
-
     st.markdown('<div class="login-title">🔐 Login</div>', unsafe_allow_html=True)
-    st.markdown(
-        '<div class="login-sub">Acesse com seu usuário e senha</div>',
-        unsafe_allow_html=True
-    )
+    st.markdown('<div class="login-sub">Acesse com seu usuário e senha</div>', unsafe_allow_html=True)
 
-    with st.container():
-        usuario = st.text_input("👤 Usuário")
-        senha = st.text_input("🔑 Senha", type="password")
-        entrar = st.button("🚀 Entrar")
+    usuario = st.text_input("👤 Usuário")
+    senha = st.text_input("🔑 Senha", type="password")
+    entrar = st.button("🚀 Entrar")
 
     if entrar:
         if autenticar(usuario, senha):

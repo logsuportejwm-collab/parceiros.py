@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import unicodedata
@@ -52,7 +51,7 @@ if "logado" not in st.session_state:
     st.session_state.logado = False
 
 # =========================================================
-# TELA LOGIN
+# TELA LOGIN (SEM SCROLL, À ESQUERDA)
 # =========================================================
 def tela_login():
 
@@ -61,8 +60,14 @@ def tela_login():
 
     st.markdown(f"""
     <style>
-    /* FUNDO */
+    /* BODY COMO FLEX */
     .stApp {{
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding-left: 5vw;
+
         background:
             linear-gradient(to left,
                 rgba(13,17,23,0.95),
@@ -74,57 +79,56 @@ def tela_login():
         background-position: center;
     }}
 
-    /* REMOVE FAIXA INVISÍVEL */
-    section[data-testid="stVerticalBlock"] > div:first-child {{
-        display: none !important;
+    /* REMOVE ESPAÇOS INVISÍVEIS */
+    section[data-testid="stVerticalBlock"] {{
+        padding-top: 0 !important;
+        margin-top: 0 !important;
     }}
 
     /* CARD LOGIN */
     .login-card {{
-        margin-top: 25vh;
-        margin-left: 5vw;
-        width: 300px;
-        padding: 22px;
+        width: 360px;
+        padding: 26px;
         background: rgba(22,27,34,0.97);
-        border-radius: 16px;
+        border-radius: 18px;
     }}
 
     /* TÍTULOS */
     .login-title {{
-        font-size: 20px;
+        font-size: 22px;
         font-weight: 700;
-        margin-bottom: 4px;
+        margin-bottom: 2px;
     }}
 
     .login-sub {{
-        font-size: 13px;
+        font-size: 14px;
         opacity: 0.75;
-        margin-bottom: 16px;
+        margin-bottom: 18px;
     }}
 
-    /* INPUTS MENORES E À ESQUERDA */
+    /* INPUTS TAMANHO MÉDIO */
     div[data-baseweb="input"] {{
-        max-width: 260px !important;
+        max-width: 320px !important;
     }}
 
     input {{
-        height: 38px !important;
-        font-size: 14px !important;
-        padding: 6px 10px !important;
+        height: 42px !important;
+        font-size: 15px !important;
+        padding: 8px 12px !important;
         background: #1f242d !important;
-        border-radius: 8px !important;
+        border-radius: 10px !important;
         border: 1px solid #2d333b !important;
         box-shadow: none !important;
     }}
 
-    /* BOTÃO AZUL */
+    /* BOTÃO */
     button[kind="primary"] {{
-        margin-top: 6px;
-        width: 140px !important;
-        height: 40px !important;
+        width: 160px !important;
+        height: 42px !important;
+        margin-top: 10px;
         background: linear-gradient(135deg,#1f6feb,#388bfd) !important;
         color: white !important;
-        border-radius: 10px !important;
+        border-radius: 12px !important;
         font-weight: 600 !important;
         border: none !important;
         box-shadow: none !important;
@@ -190,7 +194,6 @@ with colB:
         st.image(os.path.join(PASTA_BASE, "mapinha.png"), use_container_width=True)
 
 st.markdown("---")
-
 
 # =========================================================
 # FUNÇÕES AUXILIARES

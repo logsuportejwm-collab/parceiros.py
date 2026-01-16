@@ -58,122 +58,67 @@ def tela_login():
     IMAGEM_LOGIN = os.path.join(PASTA_BASE, "fundo_login.png")
     bg_url = IMAGEM_LOGIN.replace("\\", "/") if os.path.exists(IMAGEM_LOGIN) else ""
 
-st.markdown(f"""
-<style>
+    st.markdown(f"""
+    <style>
+    .stApp {{
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding-left: 5vw;
 
-/* =========================
-   REMOVE BLOCO FANTASMA DO TOPO
-========================= */
-section[data-testid="stVerticalBlock"]:first-of-type > div {{
-    background: transparent !important;
-    box-shadow: none !important;
-    border: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-}}
+        background:
+            linear-gradient(to left,
+                rgba(13,17,23,0.95),
+                rgba(13,17,23,0.75),
+                rgba(13,17,23,0.25)
+            ),
+            url("{bg_url}");
+        background-size: cover;
+        background-position: center;
+    }}
 
-section[data-testid="stVerticalBlock"] > div:has(div:empty) {{
-    display: none !important;
-}}
+    div[data-baseweb="input"] {{
+        width: 100% !important;
+    }}
 
-/* =========================
-   BODY / FUNDO
-========================= */
-.stApp {{
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding-left: 5vw;
+    input {{
+        height: 50px !important;
+        font-size: 16px !important;
+        padding: 12px 14px !important;
+        background: #1f242d !important;
+        border-radius: 12px !important;
+        border: 1px solid #2d333b !important;
+        box-shadow: none !important;
+    }}
 
-    background:
-        linear-gradient(to left,
-            rgba(13,17,23,0.95),
-            rgba(13,17,23,0.75),
-            rgba(13,17,23,0.25)
-        ),
-        url("{bg_url}");
-    background-size: cover;
-    background-position: center;
-}}
+    button[kind="primary"] {{
+        width: 100% !important;
+        height: 48px !important;
+        margin-top: 14px;
+        background: linear-gradient(135deg,#1f6feb,#388bfd) !important;
+        border-radius: 14px !important;
+        font-weight: 600 !important;
+        box-shadow: none !important;
+    }}
+    </style>
+    """, unsafe_allow_html=True)
 
-/* =========================
-   CARD LOGIN
-========================= */
-.login-card {{
-    width: 420px;
-    padding: 32px;
-    background: rgba(22,27,34,0.97);
-    border-radius: 20px;
-    box-shadow: none !important;
-}}
+    with st.container():
+        st.title("🔐 Login")
+        st.caption("Acesse com seu usuário e senha")
 
-/* =========================
-   TEXTOS
-========================= */
-.login-title {{
-    font-size: 24px;
-    font-weight: 700;
-    margin-bottom: 4px;
-}}
+        usuario = st.text_input("👤 Usuário")
+        senha = st.text_input("🔑 Senha", type="password")
+        entrar = st.button("🚀 Entrar", type="primary")
 
-.login-sub {{
-    font-size: 15px;
-    opacity: 0.75;
-    margin-bottom: 20px;
-}}
-
-/* =========================
-   INPUTS
-========================= */
-div[data-baseweb="input"] {{
-    width: 100% !important;
-}}
-
-input {{
-    height: 50px !important;
-    font-size: 16px !important;
-    padding: 12px 14px !important;
-    background: #1f242d !important;
-    border-radius: 12px !important;
-    border: 1px solid #2d333b !important;
-    box-shadow: none !important;
-}}
-
-/* =========================
-   BOTÃO
-========================= */
-button[kind="primary"] {{
-    width: 100% !important;
-    height: 48px !important;
-    margin-top: 14px;
-    background: linear-gradient(135deg,#1f6feb,#388bfd) !important;
-    color: white !important;
-    border-radius: 14px !important;
-    font-weight: 600 !important;
-    border: none !important;
-    box-shadow: none !important;
-}}
-
-</style>
-""", unsafe_allow_html=True)
-
-    st.markdown('<div class="login-card">', unsafe_allow_html=True)
-
-    st.markdown('<div class="login-title">🔐 Login</div>', unsafe_allow_html=True)
-    st.markdown('<div class="login-sub">Acesse com seu usuário e senha</div>', unsafe_allow_html=True)
-
-    usuario = st.text_input("👤 Usuário")
-    senha = st.text_input("🔑 Senha", type="password")
-    entrar = st.button("🚀 Entrar", type="primary")
-
-    if entrar:
-        if autenticar(usuario, senha):
-            st.session_state.logado = True
-            st.session_state.usuario = usuario
-            st.rerun()
-        else:
-            st.error("❌ Usuário ou senha inválidos")
+        if entrar:
+            if autenticar(usuario, senha):
+                st.session_state.logado = True
+                st.session_state.usuario = usuario
+                st.rerun()
+            else:
+                st.error("❌ Usuário ou senha inválidos")
 
     st.markdown('</div>', unsafe_allow_html=True)
 

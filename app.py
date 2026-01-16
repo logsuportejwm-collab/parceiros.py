@@ -56,21 +56,13 @@ if "logado" not in st.session_state:
 # =========================================================
 
 def tela_login():
-    import os
-    import streamlit as st
-
     IMAGEM_LOGIN = os.path.join(PASTA_BASE, "fundo_login.png")
 
-    if os.path.exists(IMAGEM_LOGIN):
-        bg_url = IMAGEM_LOGIN.replace("\\", "/")
-    else:
-        bg_url = ""
+    bg_url = IMAGEM_LOGIN.replace("\\", "/") if os.path.exists(IMAGEM_LOGIN) else ""
 
     st.markdown(f"""
     <style>
-    /* ===============================
-       FUNDO DA APLICAÇÃO (SEM ::before)
-       =============================== */
+    /* FUNDO LOGIN */
     .stApp {{
         background:
             linear-gradient(
@@ -82,15 +74,11 @@ def tela_login():
             url("{bg_url}");
         background-size: cover;
         background-position: center;
-        background-attachment: fixed;
     }}
 
-    /* REMOVE HEADER STREAMLIT */
-    header {{visibility: hidden;}}
+    /* NÃO ESCONDER HEADER NO LOGIN */
+    header {{ visibility: visible; }}
 
-    /* ===============================
-       CARD LOGIN
-       =============================== */
     .login-card {{
         margin-top: 25vh;
         margin-left: 6vw;
@@ -104,8 +92,7 @@ def tela_login():
     .login-title {{
         font-size: 26px;
         font-weight: 700;
-        color: #ffffff;
-        margin-bottom: 6px;
+        color: white;
     }}
 
     .login-sub {{
@@ -114,34 +101,25 @@ def tela_login():
         margin-bottom: 20px;
     }}
 
-    /* INPUTS */
     div[data-testid="stTextInput"] input {{
-        height: 38px !important;
-        font-size: 13px !important;
         background: #0f1620 !important;
-        border: 1px solid #30363d !important;
-        border-radius: 8px !important;
         color: white !important;
+        border-radius: 8px !important;
     }}
 
-    /* BOTÃO */
     .stButton > button {{
         width: 100%;
-        height: 38px;
-        font-size: 13px;
-        font-weight: 600;
-        color: white;
         background: linear-gradient(90deg,#007bff,#3da0ff);
+        color: white;
         border-radius: 8px;
         border: none;
-        margin-top: 12px;
     }}
     </style>
     """, unsafe_allow_html=True)
 
     st.markdown('<div class="login-card">', unsafe_allow_html=True)
     st.markdown('<div class="login-title">🔐 Login</div>', unsafe_allow_html=True)
-    st.markdown('<div class="login-sub">Acesse com seu usuário e senha</div>', unsafe_allow_html=True)
+    st.markdown('<div class="login-sub">Acesse sua conta</div>', unsafe_allow_html=True)
 
     usuario = st.text_input("👤 Usuário")
     senha = st.text_input("🔑 Senha", type="password")
@@ -155,8 +133,7 @@ def tela_login():
         else:
             st.error("❌ Usuário ou senha inválidos")
 
-    st.markdown('</div>', unsafe_allow_html=True)
-
+    st.markdown("</div>", unsafe_allow_html=True)
 
 
 # =========================================================

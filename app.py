@@ -54,124 +54,122 @@ if "logado" not in st.session_state:
 # =========================================================
 # TELA LOGIN (ALINHADA À ESQUERDA E SEM SOMBRAS)
 # =========================================================
+
 def tela_login():
 
     st.markdown("""
     <style>
-
-    /* FUNDO DO APP */
+    /* ===============================
+       FUNDO COM IMAGEM (LADO DIREITO)
+       =============================== */
     .stApp {
-        background: #0d1117 !important;
+        background-color: #0d1117;
+        position: relative;
+        overflow: hidden;
     }
 
-    /* ===== ZERA SOMBRAS DO LAYOUT ENVOLTORIO (garantia) ===== */
-    /* Bloco vertical padrão do Streamlit */
-    div[data-testid="stVerticalBlock"],
-    div[data-testid="stVerticalBlock"] > div {
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
+    .stApp::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 65%;
+        height: 100vh;
+        background:
+            linear-gradient(
+                to left,
+                rgba(13,17,23,0.95),
+                rgba(13,17,23,0.75),
+                rgba(13,17,23,0.3)
+            ),
+            url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee");
+        background-size: cover;
+        background-position: center;
+        z-index: 0;
     }
 
-    /* Bloco horizontal (comum entre input de senha e botão) */
-    div[data-testid="stHorizontalBlock"],
-    div[data-testid="stHorizontalBlock"] > div {
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-    }
-
-    /* ===== CARD À ESQUERDA ===== */
+    /* ===============================
+       CARD LOGIN
+       =============================== */
     .login-card {
         position: fixed;
         top: 50%;
-        left: 5vw;                           /* controla quão à esquerda fica */
+        left: 6vw;
         transform: translateY(-50%);
-        width: 300px;                         /* inputs curtos */
-        padding: 20px;
+        width: 320px;
+        padding: 28px;
         background: #161b22;
-        border-radius: 14px;
+        border-radius: 18px;
         border: 1px solid rgba(255,255,255,0.06);
-        box-shadow: none !important;          /* sem sombra no card */
+        z-index: 2;
     }
 
     .login-title {
-        font-size: 22px;
+        font-size: 26px;
         font-weight: 700;
-        color: #ffffff;
-        margin-bottom: 6px;
+        color: white;
+        margin-bottom: 4px;
     }
 
     .login-sub {
-        font-size: 12px;
+        font-size: 13px;
         color: #9aa4b2;
-        margin-bottom: 12px;
+        margin-bottom: 20px;
     }
 
-    /* ===== REMOVE A SOMBRA DOS WRAPPERS DOS INPUTS ===== */
-    /* Wrapper de QUALQUER st.text_input */
-    div[data-testid="stTextInput"],
+    /* ===============================
+       INPUTS
+       =============================== */
     div[data-testid="stTextInput"] > div {
         background: transparent !important;
         border: none !important;
-        box-shadow: none !important;     /* <- mata a “sombra atrás do input” */
+        box-shadow: none !important;
         padding: 0 !important;
     }
 
-    /* ===== INPUTS COMPACTOS ===== */
     div[data-testid="stTextInput"] input {
-        width: 100% !important;
-        height: 30px !important;         /* menor */
-        font-size: 12px !important;
-        color: #e6edf3 !important;
+        height: 38px !important;
+        font-size: 13px !important;
         background: #0f1620 !important;
         border: 1px solid #30363d !important;
-        border-radius: 6px !important;
-        padding: 4px 8px !important;
-        box-shadow: none !important;     /* sem sombra no próprio input */
-        outline: none !important;
-        text-shadow: none !important;
-    }
-    div[data-testid="stTextInput"] input:focus {
-        border-color: #3182ff !important;
+        border-radius: 8px !important;
+        color: white !important;
+        padding: 6px 10px !important;
         box-shadow: none !important;
-        outline: none !important;
     }
 
-    /* ===== BOTÃO “ENTRAR” — SEM SOMBRA ===== */
-    /* Wrapper que o Streamlit cria ao redor do botão */
-    div[data-testid="stButton"] > div {
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;     /* <- mata a “sombra atrás do botão” */
-        padding: 0 !important;
+    div[data-testid="stTextInput"] input:focus {
+        border-color: #3da0ff !important;
+        box-shadow: 0 0 0 1px rgba(61,160,255,0.3) !important;
     }
-    /* O botão em si */
+
+    /* ===============================
+       BOTÃO
+       =============================== */
     .stButton > button {
-        width: 110px !important;
-        height: 30px !important;
-        font-size: 12px !important;
+        width: 100%;
+        height: 38px;
+        font-size: 13px;
         font-weight: 600;
         color: #ffffff;
-        background: linear-gradient(90deg, #007bff, #3da0ff);
-        border: none !important;
-        border-radius: 6px;
-        box-shadow: none !important;     /* sem sombra no botão */
-        text-shadow: none !important;
+        background: linear-gradient(90deg,#007bff,#3da0ff);
+        border: none;
+        border-radius: 8px;
+        margin-top: 10px;
     }
+
     .stButton > button:hover {
-        filter: brightness(1.07);
+        filter: brightness(1.08);
         transform: translateY(-1px);
     }
 
     </style>
     """, unsafe_allow_html=True)
 
-    # === CARD (HTML REAL, sem &lt; &gt;) ===
     st.markdown('<div class="login-card">', unsafe_allow_html=True)
 
-    st.markdown('<div class="login-title">🔐 Login</div>', unsafe_allow_html=True)
-    st.markdown('<div class="login-sub">Acesse com seu usuário e senha</div>', unsafe_allow_html=True)
+    st.markdown('<div class="login-title">Login</div>', unsafe_allow_html=True)
+    st.markdown('<div class="login-sub">Acesse sua conta para continuar</div>', unsafe_allow_html=True)
 
     with st.form("login_form"):
         usuario = st.text_input("Usuário")
@@ -184,10 +182,9 @@ def tela_login():
             st.session_state.usuario = usuario
             st.rerun()
         else:
-            st.error("❌ Usuário ou senha inválidos")
+            st.error("Usuário ou senha inválidos")
 
-    st.markdown('</div>', unsafe_allow_html=True)  # fecha .login-card
-
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # =========================================================
 # BLOQUEIA APP SEM LOGIN

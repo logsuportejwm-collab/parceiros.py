@@ -62,13 +62,16 @@ def tela_login():
 
     st.markdown(f"""
     <style>
-    /* FUNDO */
+    /* ===============================
+       FUNDO GERAL
+       =============================== */
     .stApp {{
         background-color: #0d1117;
         position: relative;
         overflow: hidden;
     }}
 
+    /* FUNDO COM IMAGEM */
     .stApp::before {{
         content: "";
         position: fixed;
@@ -84,9 +87,12 @@ def tela_login():
         background-size: cover;
         background-position: center;
         z-index: 0;
+        pointer-events: none; /* 🔑 ESSENCIAL */
     }}
 
-    /* CARD LOGIN */
+    /* ===============================
+       CARD LOGIN
+       =============================== */
     .login-card {{
         position: fixed;
         top: 50%;
@@ -94,15 +100,15 @@ def tela_login():
         transform: translateY(-50%);
         width: 340px;
         padding: 28px;
-        background: rgba(22,27,34,0.95);
+        background: rgba(22,27,34,0.96);
         border-radius: 18px;
         border: 1px solid rgba(255,255,255,0.08);
-        z-index: 2;
+        z-index: 10;
     }}
 
     .login-card * {{
         position: relative;
-        z-index: 3;
+        z-index: 11;
     }}
 
     .login-title {{
@@ -118,7 +124,9 @@ def tela_login():
         margin-bottom: 20px;
     }}
 
-    /* INPUTS */
+    /* ===============================
+       INPUTS
+       =============================== */
     div[data-testid="stTextInput"] input {{
         height: 38px !important;
         font-size: 13px !important;
@@ -128,7 +136,9 @@ def tela_login():
         color: white !important;
     }}
 
-    /* BOTÃO */
+    /* ===============================
+       BOTÃO
+       =============================== */
     .stButton > button {{
         width: 100%;
         height: 38px;
@@ -140,13 +150,20 @@ def tela_login():
         border: none;
         margin-top: 12px;
     }}
+
+    .stButton > button:hover {{
+        filter: brightness(1.08);
+    }}
     </style>
     """, unsafe_allow_html=True)
 
     st.markdown('<div class="login-card">', unsafe_allow_html=True)
 
     st.markdown('<div class="login-title">🔐 Login</div>', unsafe_allow_html=True)
-    st.markdown('<div class="login-sub">Acesse com seu usuário e senha</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="login-sub">Acesse com seu usuário e senha</div>',
+        unsafe_allow_html=True
+    )
 
     with st.container():
         usuario = st.text_input("👤 Usuário")
@@ -162,6 +179,7 @@ def tela_login():
             st.error("❌ Usuário ou senha inválidos")
 
     st.markdown('</div>', unsafe_allow_html=True)
+
 
 
 # =========================================================

@@ -55,7 +55,7 @@ if "logado" not in st.session_state:
 # =========================================================
 def tela_login():
 
-    IMAGEM_LADO = os.path.join(PASTA_BASE, "fundo_login.png")
+    IMAGEM_LADO = os.path.join(PASTA_BASE, "Group22.png")
 
     st.markdown("""
     <style>
@@ -108,8 +108,8 @@ def tela_login():
 
     # ========= COLUNA DIREITA (IMAGEM) =========
     with col_right:
-        if os.path.exists(IMAGEM_LADO):
-            st.image(IMAGEM_LADO, use_container_width=True)
+        if os.path.exists(Group22.png):
+            st.image(Group22.png, use_container_width=True)
 
 
 # =========================================================

@@ -51,7 +51,7 @@ if "logado" not in st.session_state:
     st.session_state.logado = False
 
 # =========================================================
-# TELA LOGIN (SEM SCROLL, À ESQUERDA)
+# TELA LOGIN
 # =========================================================
 def tela_login():
 
@@ -60,7 +60,13 @@ def tela_login():
 
     st.markdown(f"""
     <style>
-    /* BODY COMO FLEX */
+
+    /* ===== CORREÇÃO DEFINITIVA DO BLOCO FANTASMA ===== */
+    section[data-testid="stVerticalBlock"] > div:first-child {{
+        display: none !important;
+    }}
+
+    /* BODY FLEX */
     .stApp {{
         min-height: 100vh;
         display: flex;
@@ -77,12 +83,6 @@ def tela_login():
             url("{bg_url}");
         background-size: cover;
         background-position: center;
-    }}
-
-    /* REMOVE ESPAÇOS INVISÍVEIS */
-    section[data-testid="stVerticalBlock"] {{
-        padding-top: 0 !important;
-        margin-top: 0 !important;
     }}
 
     /* CARD LOGIN */
@@ -106,7 +106,7 @@ def tela_login():
         margin-bottom: 18px;
     }}
 
-    /* INPUTS TAMANHO MÉDIO */
+    /* INPUTS */
     div[data-baseweb="input"] {{
         max-width: 320px !important;
     }}
@@ -134,14 +134,10 @@ def tela_login():
         box-shadow: none !important;
     }}
 
-    button[kind="primary"]:hover {{
-        background: linear-gradient(135deg,#388bfd,#1f6feb) !important;
-    }}
     </style>
     """, unsafe_allow_html=True)
 
     st.markdown('<div class="login-card">', unsafe_allow_html=True)
-
     st.markdown('<div class="login-title">🔐 Login</div>', unsafe_allow_html=True)
     st.markdown('<div class="login-sub">Acesse com seu usuário e senha</div>', unsafe_allow_html=True)
 

@@ -56,44 +56,50 @@ if "logado" not in st.session_state:
 # =========================================================
 
 def tela_login():
+
     IMAGEM_LOGIN = os.path.join(PASTA_BASE, "fundo_login.png")
 
-    bg_url = IMAGEM_LOGIN.replace("\\", "/") if os.path.exists(IMAGEM_LOGIN) else ""
+    if os.path.exists(IMAGEM_LOGIN):
+        bg_url = IMAGEM_LOGIN.replace("\\", "/")
+    else:
+        bg_url = ""
 
-st.markdown(f"""
-<style>
-.stApp {{
-    background:
-        linear-gradient(
-            to left,
-            rgba(13,17,23,0.95),
-            rgba(13,17,23,0.75),
-            rgba(13,17,23,0.25)
-        ),
-        url("{bg_url}");
-    background-size: cover;
-    background-position: center;
-}}
+    st.markdown(f"""
+    <style>
+    /* FUNDO LOGIN */
+    .stApp {{
+        background:
+            linear-gradient(
+                to left,
+                rgba(13,17,23,0.95),
+                rgba(13,17,23,0.75),
+                rgba(13,17,23,0.25)
+            ),
+            url("{bg_url}");
+        background-size: cover;
+        background-position: center;
+    }}
 
-/* REMOVE BLOCO VAZIO ACIMA DO LOGIN */
-section[data-testid="stVerticalBlock"] > div:first-child {{
-    display: none !important;
-}}
+    /* REMOVE BLOCO VAZIO ACIMA DO LOGIN */
+    section[data-testid="stVerticalBlock"] > div:first-child {{
+        display: none !important;
+    }}
 
-.login-card {{
-    margin-top: 25vh;
-    margin-left: 6vw;
-    width: 340px;
-    padding: 28px;
-    background: rgba(22,27,34,0.96);
-    border-radius: 18px;
-}}
-</style>
-""", unsafe_allow_html=True)
+    .login-card {{
+        margin-top: 25vh;
+        margin-left: 6vw;
+        width: 340px;
+        padding: 28px;
+        background: rgba(22,27,34,0.96);
+        border-radius: 18px;
+    }}
+    </style>
+    """, unsafe_allow_html=True)
 
     st.markdown('<div class="login-card">', unsafe_allow_html=True)
+
     st.markdown('<div class="login-title">🔐 Login</div>', unsafe_allow_html=True)
-    st.markdown('<div class="login-sub">Acesse sua conta</div>', unsafe_allow_html=True)
+    st.markdown('<div class="login-sub">Acesse com seu usuário e senha</div>', unsafe_allow_html=True)
 
     usuario = st.text_input("👤 Usuário")
     senha = st.text_input("🔑 Senha", type="password")
@@ -107,7 +113,7 @@ section[data-testid="stVerticalBlock"] > div:first-child {{
         else:
             st.error("❌ Usuário ou senha inválidos")
 
-    st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
 
 # =========================================================

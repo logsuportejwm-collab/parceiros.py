@@ -64,72 +64,85 @@ def tela_login():
         background: #0d1117 !important;
     }
 
-    .login-card {
-        position: fixed;
-        top: 50%;
-        left: 5vw;
-        transform: translateY(-50%);
-        width: 300px;                      /* Inputs mais curtos */
-        padding: 28px;
-        background: rgba(22, 27, 34, 0.92);
-        border-radius: 18px;
-        border: 1px solid rgba(255,255,255,0.08);
-        box-shadow: none !important;       /* sem sombra nenhuma */
-    }
-
-    .login-title {
-        font-size: 22px;
-        color: white;
-        font-weight: 700;
-        margin-bottom: 6px;
-    }
-
-    .login-sub {
-        font-size: 12px;
-        color: #9aa4b2;
-        margin-bottom: 16px;
-    }
-
-    /* Remove qualquer sombra do wrapper do input */
-    div[data-testid="stTextInput"],
-    div[data-testid="stTextInput"] > div,
-    div[data-testid="stForm"] > div {
+    /* Remove aquela SOMBRA GIGANTE atrás do login */
+    div[data-testid="stVerticalBlock"] {
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
     }
 
-    /* INPUTS REDUZIDOS E ALINHADOS */
+    /* CARD */
+    .login-card {
+        position: fixed;
+        top: 50%;
+        left: 4vw;
+        transform: translateY(-50%);
+        width: 300px;
+        padding: 25px;
+        background: #161b22;
+        border-radius: 16px;
+        border: 1px solid rgba(255,255,255,0.07);
+        box-shadow: none !important;      /* sem sombra */
+    }
+
+    .login-title {
+        font-size: 22px;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 4px;
+    }
+
+    .login-sub {
+        font-size: 12px;
+        color: #9aa4b2;
+        margin-bottom: 14px;
+    }
+
+    /* Remove sombra e fundo de wrappers */
+    div[data-testid="stForm"],
+    div[data-testid="stForm"] > div,
+    div[data-testid="stTextInput"],
+    div[data-testid="stTextInput"] > div {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+    }
+
+    /* INPUTS MENORES */
     div[data-testid="stTextInput"] input {
         width: 100% !important;
-        height: 30px !important;      /* menor */
-        font-size: 12px !important;
-        background: #161b22 !important;
-        border: 1px solid #2d3542 !important;
+        height: 30px !important;
+        background: #0f1620 !important;
+        border: 1px solid #30363d !important;
         border-radius: 8px !important;
         color: white !important;
-        padding: 4px 10px !important;
-        box-shadow: none !important;
+        font-size: 12px !important;
+        padding: 4px 8px !important;
+        box-shadow: none !important;      /* mata a sombra */
     }
 
     div[data-testid="stTextInput"] input:focus {
         border-color: #3f8cff !important;
         box-shadow: none !important;
+        outline: none !important;
     }
 
-    /* BOTÃO MENOR E À ESQUERDA */
+    /* BOTÃO */
     .stButton > button {
-        width: 110px !important;
+        width: 100px !important;
         height: 30px !important;
         font-size: 12px !important;
-        background: linear-gradient(90deg,#007bff,#3da0ff);
+        background: linear-gradient(90deg, #007bff, #3da0ff);
         border-radius: 8px;
-        border: none;
+        border: none !important;
+        box-shadow: none !important;
     }
 
     </style>
     """, unsafe_allow_html=True)
 
+    # CARD
     st.markdown('<div class="login-card">', unsafe_allow_html=True)
 
     st.markdown('<div class="login-title">🔐 Login</div>', unsafe_allow_html=True)
@@ -148,7 +161,8 @@ def tela_login():
         else:
             st.error("❌ Usuário ou senha inválidos")
 
-    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
+
 
 
 # =========================================================

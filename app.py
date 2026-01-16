@@ -54,10 +54,11 @@ if "logado" not in st.session_state:
 # TELA LOGIN (FORÇADA À ESQUERDA)
 # =========================================================
 
+
 def tela_login():
     # CSS do login (compacto, tudo à esquerda)
     st.markdown("""
-    &lt;style&gt;
+    <style>
     /* Fundo simples */
     .stApp {
         background: radial-gradient(65% 120% at 0% 50%, #0e1624 0%, #0b1220 40%, #0a1120 100%);
@@ -83,7 +84,7 @@ def tela_login():
 
     /* Remove quaisquer fundos/bordas/sombras de wrappers do form */
     div[data-testid="stForm"],
-    div[data-testid="stForm"] &gt; div,
+    div[data-testid="stForm"] > div,
     .login-box * {
         background: transparent !important;
         border: none !important;
@@ -165,22 +166,22 @@ def tela_login():
             max-width: 320px;
         }
     }
-    &lt;/style&gt;
+    </style>
     """, unsafe_allow_html=True)
 
     # Estrutura da coluna de login (encostado à esquerda)
-    st.markdown('&lt;div class="login-container"&gt;&lt;div class="login-box"&gt;', unsafe_allow_html=True)
-    st.markdown('&lt;div class="login-title"&gt;🔐 Login - Parceiros JWM&lt;/div&gt;', unsafe_allow_html=True)
+    st.markdown('<div class="login-container"><div class="login-box">', unsafe_allow_html=True)
+    st.markdown('<div class="login-title">🔐 Login - Parceiros JWM</div>', unsafe_allow_html=True)
 
     # Form compacto (inputs + botão na mesma coluna estreita)
     with st.form("form_login", clear_on_submit=False):
-        st.markdown('&lt;div class="login-field"&gt;', unsafe_allow_html=True)
+        st.markdown('<div class="login-field">', unsafe_allow_html=True)
         usuario = st.text_input("Usuário")
-        st.markdown('&lt;/div&gt;', unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
 
-        st.markdown('&lt;div class="login-field"&gt;', unsafe_allow_html=True)
+        st.markdown('<div class="login-field">', unsafe_allow_html=True)
         senha = st.text_input("Senha", type="password")
-        st.markdown('&lt;/div&gt;', unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
 
         # Botão alinhado à esquerda (sem colunas grandes ao lado)
         entrar = st.form_submit_button("Entrar")
@@ -193,7 +194,8 @@ def tela_login():
         else:
             st.error("❌ Usuário ou senha inválidos")
 
-    st.markdown('&lt;/div&gt;&lt;/div&gt;', unsafe_allow_html=True)
+    st.markdown('</div></div>', unsafe_allow_html=True)
+
 
 # =========================================================
 # BLOQUEIA APP SEM LOGIN

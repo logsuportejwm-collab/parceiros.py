@@ -65,21 +65,21 @@ def tela_login():
         background: #0d1117 !important;
     }
 
-    /* ==== CARD DE LOGIN ==== */
+    /* CARD DE LOGIN (ESQUERDA) */
     .login-card {
         position: fixed;
         top: 50%;
-        left: 5vw;                      /* LADO ESQUERDO */
+        left: 5vw;
         transform: translateY(-50%);
-        width: 380px;                   /* LARGURA DO CARD */
+        width: 360px;
         padding: 32px;
-        background: rgba(22, 27, 34, 0.92); 
+        background: rgba(22, 27, 34, 0.92);
         border-radius: 22px;
         box-shadow: 0px 8px 35px rgba(0,0,0,0.45);
         border: 1px solid rgba(255,255,255,0.06);
     }
 
-    /* ==== TÍTULO ==== */
+    /* TÍTULO */
     .login-title {
         font-size: 26px;
         color: white;
@@ -93,7 +93,7 @@ def tela_login():
         margin-bottom: 22px;
     }
 
-    /* ==== INPUTS ==== */
+    /* INPUTS */
     div[data-testid="stTextInput"] input {
         background: #161b22 !important;
         border: 1.5px solid #2d3542 !important;
@@ -115,7 +115,7 @@ def tela_login():
         margin-bottom: 4px !important;
     }
 
-    /* ==== BOTÕES ==== */
+    /* BOTÃO */
     .stButton > button {
         width: 100%;
         height: 40px;
@@ -132,7 +132,7 @@ def tela_login():
         filter: brightness(1.1);
     }
 
-    /* REMOVE QUALQUER SOMBRA / WRAPPER */
+    /* Remove sombras e wrappers */
     div[data-testid="stForm"],
     div[data-testid="stForm"] > div {
         background: transparent !important;
@@ -144,14 +144,13 @@ def tela_login():
     </style>
     """, unsafe_allow_html=True)
 
-    # === CARD VISUAL ===
+    # CARD
     st.markdown('<div class="login-card">', unsafe_allow_html=True)
 
     st.markdown('<div class="login-title">Login</div>', unsafe_allow_html=True)
     st.markdown('<div class="login-sub">Acesse com seu usuário e senha</div>', unsafe_allow_html=True)
 
-    # === FORM ===
-    with st.form("form_login"):
+    with st.form("login_form"):
         usuario = st.text_input("Usuário")
         senha = st.text_input("Senha", type="password")
         entrar = st.form_submit_button("Entrar")
@@ -166,32 +165,6 @@ def tela_login():
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # Estrutura da coluna de login (encostado à esquerda)
-    st.markdown('<div class="login-container"><div class="login-box">', unsafe_allow_html=True)
-    st.markdown('<div class="login-title">🔐 Login - Parceiros JWM</div>', unsafe_allow_html=True)
-
-    # Form compacto (inputs + botão na mesma coluna estreita)
-    with st.form("form_login", clear_on_submit=False):
-        st.markdown('<div class="login-field">', unsafe_allow_html=True)
-        usuario = st.text_input("Usuário")
-        st.markdown('</div>', unsafe_allow_html=True)
-
-        st.markdown('<div class="login-field">', unsafe_allow_html=True)
-        senha = st.text_input("Senha", type="password")
-        st.markdown('</div>', unsafe_allow_html=True)
-
-        # Botão alinhado à esquerda (sem colunas grandes ao lado)
-        entrar = st.form_submit_button("Entrar")
-
-    if entrar:
-        if autenticar(usuario, senha):
-            st.session_state.logado = True
-            st.session_state.usuario = usuario
-            st.rerun()
-        else:
-            st.error("❌ Usuário ou senha inválidos")
-
-    st.markdown('</div></div>', unsafe_allow_html=True)
 
 # =========================================================
 # BLOQUEIA APP SEM LOGIN

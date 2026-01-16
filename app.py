@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 import unicodedata
@@ -51,98 +52,122 @@ if "logado" not in st.session_state:
     st.session_state.logado = False
 
 # =========================================================
-# TELA LOGIN (FORÇADA À ESQUERDA)
+# TELA LOGIN (ALINHADA À ESQUERDA E SEM SOMBRAS)
 # =========================================================
-
-
 def tela_login():
 
     st.markdown("""
     <style>
 
+    /* FUNDO DO APP */
     .stApp {
         background: #0d1117 !important;
     }
 
-    /* Remove aquela SOMBRA GIGANTE atrás do login */
-    div[data-testid="stVerticalBlock"] {
+    /* ===== ZERA SOMBRAS DO LAYOUT ENVOLTORIO (garantia) ===== */
+    /* Bloco vertical padrão do Streamlit */
+    div[data-testid="stVerticalBlock"],
+    div[data-testid="stVerticalBlock"] > div {
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
     }
 
-    /* CARD */
+    /* Bloco horizontal (comum entre input de senha e botão) */
+    div[data-testid="stHorizontalBlock"],
+    div[data-testid="stHorizontalBlock"] > div {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+    /* ===== CARD À ESQUERDA ===== */
     .login-card {
         position: fixed;
         top: 50%;
-        left: 4vw;
+        left: 5vw;                           /* controla quão à esquerda fica */
         transform: translateY(-50%);
-        width: 300px;
-        padding: 25px;
+        width: 300px;                         /* inputs curtos */
+        padding: 20px;
         background: #161b22;
-        border-radius: 16px;
-        border: 1px solid rgba(255,255,255,0.07);
-        box-shadow: none !important;      /* sem sombra */
+        border-radius: 14px;
+        border: 1px solid rgba(255,255,255,0.06);
+        box-shadow: none !important;          /* sem sombra no card */
     }
 
     .login-title {
         font-size: 22px;
         font-weight: 700;
-        color: white;
-        margin-bottom: 4px;
+        color: #ffffff;
+        margin-bottom: 6px;
     }
 
     .login-sub {
         font-size: 12px;
         color: #9aa4b2;
-        margin-bottom: 14px;
+        margin-bottom: 12px;
     }
 
-    /* Remove sombra e fundo de wrappers */
-    div[data-testid="stForm"],
-    div[data-testid="stForm"] > div,
+    /* ===== REMOVE A SOMBRA DOS WRAPPERS DOS INPUTS ===== */
+    /* Wrapper de QUALQUER st.text_input */
     div[data-testid="stTextInput"],
     div[data-testid="stTextInput"] > div {
         background: transparent !important;
         border: none !important;
-        box-shadow: none !important;
+        box-shadow: none !important;     /* <- mata a “sombra atrás do input” */
         padding: 0 !important;
     }
 
-    /* INPUTS MENORES */
+    /* ===== INPUTS COMPACTOS ===== */
     div[data-testid="stTextInput"] input {
         width: 100% !important;
-        height: 30px !important;
+        height: 30px !important;         /* menor */
+        font-size: 12px !important;
+        color: #e6edf3 !important;
         background: #0f1620 !important;
         border: 1px solid #30363d !important;
-        border-radius: 8px !important;
-        color: white !important;
-        font-size: 12px !important;
+        border-radius: 6px !important;
         padding: 4px 8px !important;
-        box-shadow: none !important;      /* mata a sombra */
+        box-shadow: none !important;     /* sem sombra no próprio input */
+        outline: none !important;
+        text-shadow: none !important;
     }
-
     div[data-testid="stTextInput"] input:focus {
-        border-color: #3f8cff !important;
+        border-color: #3182ff !important;
         box-shadow: none !important;
         outline: none !important;
     }
 
-    /* BOTÃO */
+    /* ===== BOTÃO “ENTRAR” — SEM SOMBRA ===== */
+    /* Wrapper que o Streamlit cria ao redor do botão */
+    div[data-testid="stButton"] > div {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;     /* <- mata a “sombra atrás do botão” */
+        padding: 0 !important;
+    }
+    /* O botão em si */
     .stButton > button {
-        width: 100px !important;
+        width: 110px !important;
         height: 30px !important;
         font-size: 12px !important;
+        font-weight: 600;
+        color: #ffffff;
         background: linear-gradient(90deg, #007bff, #3da0ff);
-        border-radius: 8px;
         border: none !important;
-        box-shadow: none !important;
+        border-radius: 6px;
+        box-shadow: none !important;     /* sem sombra no botão */
+        text-shadow: none !important;
+    }
+    .stButton > button:hover {
+        filter: brightness(1.07);
+        transform: translateY(-1px);
     }
 
     </style>
     """, unsafe_allow_html=True)
 
-    # CARD
+    # === CARD (HTML REAL, sem &lt; &gt;) ===
     st.markdown('<div class="login-card">', unsafe_allow_html=True)
 
     st.markdown('<div class="login-title">🔐 Login</div>', unsafe_allow_html=True)
@@ -161,8 +186,7 @@ def tela_login():
         else:
             st.error("❌ Usuário ou senha inválidos")
 
-    st.markdown("</div>", unsafe_allow_html=True)
-
+    st.markdown('</div>', unsafe_allow_html=True)  # fecha .login-card
 
 
 # =========================================================
@@ -173,7 +197,7 @@ if not st.session_state.logado:
     st.stop()
 
 # =========================================================
-# FUNDO DO APP 
+# FUNDO DO APP (pós-login)
 # =========================================================
 st.markdown("""
 <style>

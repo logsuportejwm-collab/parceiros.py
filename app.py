@@ -56,118 +56,115 @@ if "logado" not in st.session_state:
 
 
 def tela_login():
-    # CSS do login (compacto, tudo à esquerda)
+
     st.markdown("""
     <style>
-    /* Fundo simples */
+
+    /* Fundo */
     .stApp {
-        background: radial-gradient(65% 120% at 0% 50%, #0e1624 0%, #0b1220 40%, #0a1120 100%);
+        background: #0d1117 !important;
     }
 
-    /* Coluna fixa à esquerda e mais estreita */
-    .login-container {
+    /* ==== CARD DE LOGIN ==== */
+    .login-card {
         position: fixed;
         top: 50%;
-        left: 4vw;                 /* mais à esquerda */
+        left: 5vw;                      /* LADO ESQUERDO */
         transform: translateY(-50%);
-        width: 280px;              /* MAIS COMPACTO */
-        z-index: 10;
+        width: 380px;                   /* LARGURA DO CARD */
+        padding: 32px;
+        background: rgba(22, 27, 34, 0.92); 
+        border-radius: 22px;
+        box-shadow: 0px 8px 35px rgba(0,0,0,0.45);
+        border: 1px solid rgba(255,255,255,0.06);
     }
 
-    /* Caixa do login — sem fundo, sem borda/sombra e sem padding extra */
-    .login-box {
-        background: transparent;
-        padding: 0;
-        border: none !important;
-        box-shadow: none !important;
+    /* ==== TÍTULO ==== */
+    .login-title {
+        font-size: 26px;
+        color: white;
+        font-weight: 700;
+        margin-bottom: 8px;
     }
 
-    /* Remove quaisquer fundos/bordas/sombras de wrappers do form */
+    .login-sub {
+        font-size: 13px;
+        color: #999;
+        margin-bottom: 22px;
+    }
+
+    /* ==== INPUTS ==== */
+    div[data-testid="stTextInput"] input {
+        background: #161b22 !important;
+        border: 1.5px solid #2d3542 !important;
+        border-radius: 10px !important;
+        height: 38px !important;
+        color: white !important;
+        font-size: 14px !important;
+        padding-left: 12px !important;
+    }
+
+    div[data-testid="stTextInput"] input:focus {
+        border: 1.5px solid #3182ff !important;
+        box-shadow: 0 0 0 !important;
+    }
+
+    label {
+        color: #c9d1d9 !important;
+        font-size: 13px !important;
+        margin-bottom: 4px !important;
+    }
+
+    /* ==== BOTÕES ==== */
+    .stButton > button {
+        width: 100%;
+        height: 40px;
+        background: linear-gradient(90deg, #007bff, #2997ff);
+        color: white;
+        font-size: 15px;
+        font-weight: bold;
+        border-radius: 10px;
+        border: none;
+    }
+
+    .stButton > button:hover {
+        transform: translateY(-1px);
+        filter: brightness(1.1);
+    }
+
+    /* REMOVE QUALQUER SOMBRA / WRAPPER */
     div[data-testid="stForm"],
-    div[data-testid="stForm"] > div,
-    .login-box * {
+    div[data-testid="stForm"] > div {
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
+        padding: 0 !important;
     }
 
-    /* Título compacto e alinhado à esquerda */
-    .login-title {
-        font-size: 18px;           /* menor */
-        color: #e9edf5;
-        font-weight: 600;
-        margin: 0 0 8px 0;
-        letter-spacing: .2px;
-        text-align: left;
-    }
-
-    /* Labels compactas */
-    label, .stTextInput label, .stPassword label {
-        font-size: 11px !important;
-        color: #cbd6e2 !important;
-        margin-bottom: 3px !important;
-        text-shadow: none !important;
-        text-align: left !important;
-    }
-
-    /* INPUTS — menores e 100% da coluna (280px) */
-    div[data-testid="stTextInput"] { width: 100% !important; }
-    div[data-testid="stTextInput"] input {
-        width: 100% !important;
-        height: 30px !important;        /* mais baixo */
-        font-size: 12px !important;     /* menor */
-        color: #e5eefc !important;
-        background-color: #0b1320 !important;
-        border: 1.2px solid #263448 !important;
-        border-radius: 8px !important;  /* menos arredondado */
-        padding: 4px 8px !important;
-
-        /* sem sombras/efeitos */
-        box-shadow: none !important;
-        outline: none !important;
-        text-shadow: none !important;
-    }
-    /* Sem glow no foco; só leve realce na borda (opcional) */
-    div[data-testid="stTextInput"] input:focus {
-        border-color: #2f89ff !important;
-        box-shadow: none !important;
-        outline: none !important;
-    }
-
-    /* Espaçamento vertical menor entre os campos */
-    .login-field { margin-bottom: 8px; }
-
-    /* Botão pequeno, à esquerda e sem sombra */
-    .stButton button {
-        width: 100px;                 /* menor */
-        height: 30px;
-        font-size: 12px;
-        font-weight: 600;
-        color: #ffffff;
-        background: linear-gradient(90deg, #0a84ff, #35b8ff);
-        border: none;
-        border-radius: 8px;
-        box-shadow: none !important;
-        text-shadow: none !important;
-        transition: filter .15s ease;
-    }
-    .stButton button:hover { filter: brightness(1.05); }
-
-    /* Esconde menu/rodapé no login (opcional) */
-    footer {visibility: hidden;}
-    #MainMenu {visibility: hidden;}
-
-    /* Responsivo: centraliza no mobile */
-    @media (max-width: 768px) {
-        .login-container {
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 92vw;
-            max-width: 320px;
-        }
-    }
     </style>
     """, unsafe_allow_html=True)
+
+    # === CARD VISUAL ===
+    st.markdown('<div class="login-card">', unsafe_allow_html=True)
+
+    st.markdown('<div class="login-title">Login</div>', unsafe_allow_html=True)
+    st.markdown('<div class="login-sub">Acesse com seu usuário e senha</div>', unsafe_allow_html=True)
+
+    # === FORM ===
+    with st.form("form_login"):
+        usuario = st.text_input("Usuário")
+        senha = st.text_input("Senha", type="password")
+        entrar = st.form_submit_button("Entrar")
+
+    if entrar:
+        if autenticar(usuario, senha):
+            st.session_state.logado = True
+            st.session_state.usuario = usuario
+            st.rerun()
+        else:
+            st.error("❌ Usuário ou senha inválidos")
+
+    st.markdown('</div>', unsafe_allow_html=True)
 
     # Estrutura da coluna de login (encostado à esquerda)
     st.markdown('<div class="login-container"><div class="login-box">', unsafe_allow_html=True)

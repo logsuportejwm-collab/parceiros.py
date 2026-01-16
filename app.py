@@ -59,135 +59,85 @@ def tela_login():
 
     st.markdown("""
     <style>
-    /* ===== Fundo ===== */
+
     .stApp {
         background: #0d1117 !important;
     }
 
-    /* ===== CARD de login (alinhado à esquerda) ===== */
     .login-card {
         position: fixed;
         top: 50%;
-        left: 5vw;                       /* controla quão à esquerda fica */
+        left: 5vw;
         transform: translateY(-50%);
-        width: 360px;                     /* largura do card */
-        padding: 24px;
+        width: 300px;                      /* Inputs mais curtos */
+        padding: 28px;
         background: rgba(22, 27, 34, 0.92);
         border-radius: 18px;
-        border: 1px solid rgba(255,255,255,0.06);
-        box-shadow: 0 6px 26px rgba(0,0,0,0.4);
+        border: 1px solid rgba(255,255,255,0.08);
+        box-shadow: none !important;       /* sem sombra nenhuma */
     }
 
-    /* ===== Títulos ===== */
     .login-title {
-        font-size: 24px;
-        color: #fff;
+        font-size: 22px;
+        color: white;
         font-weight: 700;
-        margin: 0 0 6px 0;
-        text-align: left;
-    }
-    .login-sub {
-        font-size: 13px;
-        color: #9aa4b2;
-        margin: 0 0 18px 0;
-        text-align: left;
+        margin-bottom: 6px;
     }
 
-    /* ===== Remover sombra/fundo/borda de todos os wrappers do form e inputs ===== */
-    div[data-testid="stForm"],
-    div[data-testid="stForm"] > div,
+    .login-sub {
+        font-size: 12px;
+        color: #9aa4b2;
+        margin-bottom: 16px;
+    }
+
+    /* Remove qualquer sombra do wrapper do input */
     div[data-testid="stTextInput"],
-    div[data-testid="stTextInput"] > div {
+    div[data-testid="stTextInput"] > div,
+    div[data-testid="stForm"] > div {
         background: transparent !important;
         border: none !important;
-        box-shadow: none !important;      /* mata a “sombra atrás do input” */
-        padding: 0 !important;
+        box-shadow: none !important;
     }
 
-    /* ===== Largura dos campos (encostados à esquerda) ===== */
-    .login-card .field {                  /* wrapper fino para controlar largura */
-        max-width: 260px;                 /* encurta os inputs */
-        width: 100%;
-    }
-
-    /* ===== Labels ===== */
-    label {
-        color: #c9d1d9 !important;
-        font-size: 12px !important;
-        margin-bottom: 4px !important;
-        text-shadow: none !important;
-    }
-
-    /* ===== Inputs ===== */
+    /* INPUTS REDUZIDOS E ALINHADOS */
     div[data-testid="stTextInput"] input {
-        width: 100% !important;           /* ocupa os 260px do .field */
-        height: 32px !important;          /* compacto */
+        width: 100% !important;
+        height: 30px !important;      /* menor */
         font-size: 12px !important;
-        color: #e6edf3 !important;
         background: #161b22 !important;
-        border: 1.2px solid #2d3542 !important;
+        border: 1px solid #2d3542 !important;
         border-radius: 8px !important;
+        color: white !important;
         padding: 4px 10px !important;
-
-        outline: none !important;
-        box-shadow: none !important;      /* sem sombra no input */
-        text-shadow: none !important;
+        box-shadow: none !important;
     }
+
     div[data-testid="stTextInput"] input:focus {
-        border-color: #3182ff !important;
+        border-color: #3f8cff !important;
         box-shadow: none !important;
-        outline: none !important;
     }
 
-    /* ===== Botão compacto, também à esquerda ===== */
+    /* BOTÃO MENOR E À ESQUERDA */
     .stButton > button {
-        width: 120px;                     /* menor */
-        height: 32px;
-        font-size: 12px;
-        font-weight: 600;
-        color: #ffffff;
-        background: linear-gradient(90deg, #007bff, #2997ff);
-        border: none;
+        width: 110px !important;
+        height: 30px !important;
+        font-size: 12px !important;
+        background: linear-gradient(90deg,#007bff,#3da0ff);
         border-radius: 8px;
-        box-shadow: none !important;
-        text-shadow: none !important;
-    }
-    .stButton > button:hover {
-        filter: brightness(1.06);
-        transform: translateY(-1px);
+        border: none;
     }
 
-    /* Opcional: esconder menu/rodapé no login */
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-
-    /* Mobile: centraliza o card para caber melhor */
-    @media (max-width: 768px) {
-        .login-card {
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 92vw;
-            max-width: 360px;
-        }
-    }
     </style>
     """, unsafe_allow_html=True)
 
-    # === CARD (use tags REAIS, sem &lt; &gt;) ===
     st.markdown('<div class="login-card">', unsafe_allow_html=True)
-    st.markdown('<div class="login-title">Login</div>', unsafe_allow_html=True)
+
+    st.markdown('<div class="login-title">🔐 Login</div>', unsafe_allow_html=True)
     st.markdown('<div class="login-sub">Acesse com seu usuário e senha</div>', unsafe_allow_html=True)
 
-    # Form — campos dentro de wrappers .field para controlar a largura
     with st.form("login_form"):
-        st.markdown('<div class="field">', unsafe_allow_html=True)
         usuario = st.text_input("Usuário")
-        st.markdown('</div>', unsafe_allow_html=True)
-
-        st.markdown('<div class="field">', unsafe_allow_html=True)
         senha = st.text_input("Senha", type="password")
-        st.markdown('</div>', unsafe_allow_html=True)
-
         entrar = st.form_submit_button("Entrar")
 
     if entrar:
@@ -199,7 +149,6 @@ def tela_login():
             st.error("❌ Usuário ou senha inválidos")
 
     st.markdown('</div>', unsafe_allow_html=True)
-
 
 
 # =========================================================

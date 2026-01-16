@@ -61,12 +61,27 @@ def tela_login():
     st.markdown(f"""
     <style>
 
-    /* ===== CORREÇÃO DEFINITIVA DO BLOCO FANTASMA ===== */
-    section[data-testid="stVerticalBlock"] > div:first-child {{
+    /* =========================
+       REMOVE QUALQUER BLOCO FANTASMA
+    ========================== */
+    section[data-testid="stVerticalBlock"] {{
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+    }}
+
+    section[data-testid="stVerticalBlock"] > div {{
+        background: transparent !important;
+        box-shadow: none !important;
+        border: none !important;
+    }}
+
+    div[data-testid="stVerticalBlock"] > div:empty {{
         display: none !important;
     }}
 
-    /* BODY FLEX */
+    /* =========================
+       BODY / FUNDO
+    ========================== */
     .stApp {{
         min-height: 100vh;
         display: flex;
@@ -85,50 +100,60 @@ def tela_login():
         background-position: center;
     }}
 
-    /* CARD LOGIN */
+    /* =========================
+       CARD LOGIN
+    ========================== */
     .login-card {{
-        width: 360px;
-        padding: 26px;
+        width: 420px;
+        padding: 32px;
         background: rgba(22,27,34,0.97);
-        border-radius: 18px;
+        border-radius: 20px;
+        box-shadow: none !important;
     }}
 
-    /* TÍTULOS */
+    /* =========================
+       TEXTOS
+    ========================== */
     .login-title {{
-        font-size: 22px;
+        font-size: 24px;
         font-weight: 700;
-        margin-bottom: 2px;
+        margin-bottom: 4px;
     }}
 
     .login-sub {{
-        font-size: 14px;
+        font-size: 15px;
         opacity: 0.75;
-        margin-bottom: 18px;
+        margin-bottom: 20px;
     }}
 
-    /* INPUTS */
+    /* =========================
+       INPUTS GRANDES (DE VERDADE)
+    ========================== */
     div[data-baseweb="input"] {{
-        max-width: 320px !important;
+        width: 100% !important;
+        max-width: 100% !important;
     }}
 
     input {{
-        height: 42px !important;
-        font-size: 15px !important;
-        padding: 8px 12px !important;
+        height: 50px !important;
+        font-size: 16px !important;
+        padding: 12px 14px !important;
         background: #1f242d !important;
-        border-radius: 10px !important;
+        border-radius: 12px !important;
         border: 1px solid #2d333b !important;
         box-shadow: none !important;
     }}
 
-    /* BOTÃO */
+    /* =========================
+       BOTÃO
+    ========================== */
     button[kind="primary"] {{
-        width: 160px !important;
-        height: 42px !important;
-        margin-top: 10px;
+        width: 100% !important;
+        height: 48px !important;
+        margin-top: 14px;
         background: linear-gradient(135deg,#1f6feb,#388bfd) !important;
         color: white !important;
-        border-radius: 12px !important;
+        border-radius: 14px !important;
         font-weight: 600 !important;
         border: none !important;
         box-shadow: none !important;
@@ -138,6 +163,7 @@ def tela_login():
     """, unsafe_allow_html=True)
 
     st.markdown('<div class="login-card">', unsafe_allow_html=True)
+
     st.markdown('<div class="login-title">🔐 Login</div>', unsafe_allow_html=True)
     st.markdown('<div class="login-sub">Acesse com seu usuário e senha</div>', unsafe_allow_html=True)
 

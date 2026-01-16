@@ -55,28 +55,36 @@ if "logado" not in st.session_state:
 # =========================================================
 
 
+
 def tela_login():
-    # CSS do login (compacto e alinhado à esquerda)
+    # CSS do login (compacto, à esquerda e sem contornos do form)
     st.markdown("""
     <style>
+    /* Fundo geral */
     .stApp {
         background: radial-gradient(65% 120% at 0% 50%, #0e1624 0%, #0b1220 40%, #0a1120 100%);
     }
+
+    /* Container: menor e alinhado à esquerda, centralizado verticalmente */
     .login-container {
         position: fixed;
         top: 50%;
-        left: 8vw;                 /* ajusta a posição mais à esquerda */
+        left: 8vw;                 /* ajusta quão à esquerda fica */
         transform: translateY(-50%);
         width: 320px;              /* caixa menor */
         z-index: 10;
     }
+
+    /* Caixa da área de login */
     .login-box {
         background: rgba(14, 22, 36, 0.92);
         padding: 22px;             /* padding menor */
         border-radius: 14px;
         box-shadow: 0 10px 28px rgba(0,0,0,0.35);
-        border: 1px solid rgba(255,255,255,0.06);
+        border: none;              /* sem borda externa */
     }
+
+    /* Título menor */
     .login-title {
         font-size: 22px;
         color: #e9edf5;
@@ -84,11 +92,15 @@ def tela_login():
         margin: 0 0 12px 0;
         letter-spacing: 0.2px;
     }
+
+    /* Labels mais compactas */
     label, .stTextInput label, .stPassword label {
         font-size: 12px !important;
         color: #cbd6e2 !important;
         margin-bottom: 4px !important;
     }
+
+    /* Inputs menores */
     div[data-testid="stTextInput"] input {
         background-color: #0b1320 !important;
         height: 34px !important;
@@ -102,10 +114,14 @@ def tela_login():
         border-color: #2f89ff !important;
         box-shadow: 0 0 0 2px rgba(47,137,255,0.15) !important;
     }
+
+    /* Espaçamento entre inputs */
     .login-box .block-container > div,
     .login-box div[data-testid="stTextInput"] {
         margin-bottom: 10px;
     }
+
+    /* Botão menor e à esquerda */
     .stButton button {
         width: 120px;              /* botão menor */
         height: 34px;
@@ -121,10 +137,31 @@ def tela_login():
         transform: translateY(-1px);
         filter: brightness(1.05);
     }
+
+    /* === REMOVER A "FORMA" DO FORMULÁRIO E DO BOTÃO === */
+    div[data-testid="stForm"] {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+    }
+    div[data-testid="stForm"] > div {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+    div[data-testid="stForm"] .stButton,
+    div[data-testid="stForm"] .stButton > div {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+    /* Esconde o rodapé/menu para login ficar limpo (opcional) */
     footer {visibility: hidden;}
     #MainMenu {visibility: hidden;}
 
-    /* Responsivo: em telas estreitas, centraliza */
+    /* Responsivo: em telas estreitas centraliza no meio */
     @media (max-width: 768px) {
         .login-container {
             left: 50%;
@@ -136,9 +173,11 @@ def tela_login():
     </style>
     """, unsafe_allow_html=True)
 
+    # Estrutura do login
     st.markdown('<div class="login-container"><div class="login-box">', unsafe_allow_html=True)
     st.markdown('<div class="login-title">🔐 Login - Parceiros JWM</div>', unsafe_allow_html=True)
 
+    # Form compacto (sem “forma” ao redor)
     with st.form("form_login", clear_on_submit=False):
         usuario = st.text_input("Usuário")
         senha = st.text_input("Senha", type="password")
@@ -154,6 +193,7 @@ def tela_login():
             st.error("❌ Usuário ou senha inválidos")
 
     st.markdown('</div></div>', unsafe_allow_html=True)
+
 
 
 # =========================================================

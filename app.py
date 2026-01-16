@@ -60,62 +60,36 @@ def tela_login():
 
     bg_url = IMAGEM_LOGIN.replace("\\", "/") if os.path.exists(IMAGEM_LOGIN) else ""
 
-    st.markdown(f"""
-    <style>
-    /* FUNDO LOGIN */
-    .stApp {{
-        background:
-            linear-gradient(
-                to left,
-                rgba(13,17,23,0.95),
-                rgba(13,17,23,0.75),
-                rgba(13,17,23,0.25)
-            ),
-            url("{bg_url}");
-        background-size: cover;
-        background-position: center;
-    }}
+st.markdown(f"""
+<style>
+.stApp {{
+    background:
+        linear-gradient(
+            to left,
+            rgba(13,17,23,0.95),
+            rgba(13,17,23,0.75),
+            rgba(13,17,23,0.25)
+        ),
+        url("{bg_url}");
+    background-size: cover;
+    background-position: center;
+}}
 
-    /* NÃO ESCONDER HEADER NO LOGIN */
-    header {{ visibility: visible; }}
+/* REMOVE BLOCO VAZIO ACIMA DO LOGIN */
+section[data-testid="stVerticalBlock"] > div:first-child {{
+    display: none !important;
+}}
 
-    .login-card {{
-        margin-top: 25vh;
-        margin-left: 6vw;
-        width: 340px;
-        padding: 28px;
-        background: rgba(22,27,34,0.96);
-        border-radius: 18px;
-        border: 1px solid rgba(255,255,255,0.08);
-    }}
-
-    .login-title {{
-        font-size: 26px;
-        font-weight: 700;
-        color: white;
-    }}
-
-    .login-sub {{
-        font-size: 13px;
-        color: #9aa4b2;
-        margin-bottom: 20px;
-    }}
-
-    div[data-testid="stTextInput"] input {{
-        background: #0f1620 !important;
-        color: white !important;
-        border-radius: 8px !important;
-    }}
-
-    .stButton > button {{
-        width: 100%;
-        background: linear-gradient(90deg,#007bff,#3da0ff);
-        color: white;
-        border-radius: 8px;
-        border: none;
-    }}
-    </style>
-    """, unsafe_allow_html=True)
+.login-card {{
+    margin-top: 25vh;
+    margin-left: 6vw;
+    width: 340px;
+    padding: 28px;
+    background: rgba(22,27,34,0.96);
+    border-radius: 18px;
+}}
+</style>
+""", unsafe_allow_html=True)
 
     st.markdown('<div class="login-card">', unsafe_allow_html=True)
     st.markdown('<div class="login-title">🔐 Login</div>', unsafe_allow_html=True)

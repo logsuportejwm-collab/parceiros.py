@@ -56,6 +56,11 @@ if "logado" not in st.session_state:
 # =========================================================
 def tela_login():
 
+    IMAGEM_LOGIN = os.path.join(PASTA_BASE, "fundo_login.png")
+
+    if not os.path.exists(IMAGEM_LOGIN):
+        IMAGEM_LOGIN = ""
+
     bg_url = IMAGEM_LOGIN.replace("\\", "/")
 
     st.markdown(f"""

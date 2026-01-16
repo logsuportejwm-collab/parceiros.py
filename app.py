@@ -55,34 +55,16 @@ if "logado" not in st.session_state:
 # =========================================================
 def tela_login():
 
-    IMAGEM_LOGIN = os.path.join(PASTA_BASE, "fundo_login.png")
-    bg_url = IMAGEM_LOGIN.replace("\\", "/") if os.path.exists(IMAGEM_LOGIN) else ""
+    IMAGEM_LADO = os.path.join(PASTA_BASE, "fundo_login.png")
 
-    st.markdown(f"""
+    st.markdown("""
     <style>
-    .stApp {{
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        padding-left: 5vw;
-
-        background:
-            linear-gradient(to left,
-                rgba(13,17,23,0.95),
-                rgba(13,17,23,0.75),
-                rgba(13,17,23,0.25)
-            ),
-            url("{bg_url}");
-        background-size: cover;
-        background-position: center;
-    }}
-
-    div[data-baseweb="input"] {{
+    div[data-baseweb="input"] {
         width: 100% !important;
-    }}
+        max-width: 420px !important;
+    }
 
-    input {{
+    input {
         height: 50px !important;
         font-size: 16px !important;
         padding: 12px 14px !important;
@@ -90,21 +72,25 @@ def tela_login():
         border-radius: 12px !important;
         border: 1px solid #2d333b !important;
         box-shadow: none !important;
-    }}
+    }
 
-    button[kind="primary"] {{
+    button[kind="primary"] {
         width: 100% !important;
+        max-width: 420px !important;
         height: 48px !important;
         margin-top: 14px;
         background: linear-gradient(135deg,#1f6feb,#388bfd) !important;
         border-radius: 14px !important;
         font-weight: 600 !important;
         box-shadow: none !important;
-    }}
+    }
     </style>
     """, unsafe_allow_html=True)
 
-    with st.container():
+    col_left, col_right = st.columns([55, 45])
+
+    # ========= COLUNA ESQUERDA (LOGIN) =========
+    with col_left:
         st.title("🔐 Login")
         st.caption("Acesse com seu usuário e senha")
 
@@ -120,7 +106,11 @@ def tela_login():
             else:
                 st.error("❌ Usuário ou senha inválidos")
 
-    st.markdown('</div>', unsafe_allow_html=True)
+    # ========= COLUNA DIREITA (IMAGEM) =========
+    with col_right:
+        if os.path.exists(IMAGEM_LADO):
+            st.image(IMAGEM_LADO, use_container_width=True)
+
 
 # =========================================================
 # BLOQUEIO SEM LOGIN

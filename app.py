@@ -55,75 +55,91 @@ if "logado" not in st.session_state:
 # =========================================================
 
 
-
 def tela_login():
-    # CSS do login (compacto, à esquerda e sem contornos do form)
+    # CSS do login (sem sombras e coluna à esquerda)
     st.markdown("""
     <style>
-    /* Fundo geral */
+    /* Fundo simples */
     .stApp {
         background: radial-gradient(65% 120% at 0% 50%, #0e1624 0%, #0b1220 40%, #0a1120 100%);
     }
 
-    /* Container: menor e alinhado à esquerda, centralizado verticalmente */
+    /* Coluna de login: fixa à esquerda e estreita */
     .login-container {
         position: fixed;
         top: 50%;
-        left: 8vw;                 /* ajusta quão à esquerda fica */
+        left: 6vw;                 /* empurra para a esquerda */
         transform: translateY(-50%);
-        width: 320px;              /* caixa menor */
+        width: 320px;              /* largura fixa da coluna */
         z-index: 10;
     }
 
-    /* Caixa da área de login */
+    /* Caixa do login — sem sombras/bordas */
     .login-box {
-        background: rgba(14, 22, 36, 0.92);
-        padding: 22px;             /* padding menor */
-        border-radius: 14px;
-        box-shadow: 0 10px 28px rgba(0,0,0,0.35);
-        border: none;              /* sem borda externa */
+        background: transparent;   /* sem bloco escuro por trás */
+        padding: 0;
+        border: none !important;
+        box-shadow: none !important;
     }
 
-    /* Título menor */
+    /* Remove sombras/bordas de QUALQUER wrapper do form */
+    div[data-testid="stForm"],
+    div[data-testid="stForm"] > div,
+    .login-box * {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+    /* Título enxuto */
     .login-title {
-        font-size: 22px;
+        font-size: 20px;
         color: #e9edf5;
         font-weight: 600;
-        margin: 0 0 12px 0;
-        letter-spacing: 0.2px;
+        margin: 0 0 10px 0;
+        letter-spacing: .2px;
     }
 
-    /* Labels mais compactas */
+    /* Label compacta e sem sombra */
     label, .stTextInput label, .stPassword label {
         font-size: 12px !important;
         color: #cbd6e2 !important;
         margin-bottom: 4px !important;
+        text-shadow: none !important;
     }
 
-    /* Inputs menores */
+    /* INPUTS — sem sombra, sem glow, largura total da coluna */
+    div[data-testid="stTextInput"] {
+        width: 100% !important;     /* respeita os 320px do container */
+    }
     div[data-testid="stTextInput"] input {
-        background-color: #0b1320 !important;
+        width: 100% !important;
         height: 34px !important;
         font-size: 13px !important;
         color: #e5eefc !important;
+        background-color: #0b1320 !important;
         border: 1.5px solid #263448 !important;
         border-radius: 10px !important;
         padding: 6px 10px !important;
+
+        /* remove sombras/efeitos */
+        box-shadow: none !important;
+        outline: none !important;
+        text-shadow: none !important;
     }
+    /* Sem “glow” no foco; só muda a cor da borda se quiser */
     div[data-testid="stTextInput"] input:focus {
         border-color: #2f89ff !important;
-        box-shadow: 0 0 0 2px rgba(47,137,255,0.15) !important;
+        box-shadow: none !important;
+        outline: none !important;
     }
 
-    /* Espaçamento entre inputs */
-    .login-box .block-container > div,
-    .login-box div[data-testid="stTextInput"] {
-        margin-bottom: 10px;
-    }
+    /* Espaçamento entre campos */
+    .login-field { margin-bottom: 10px; }
 
-    /* Botão menor e à esquerda */
+    /* Botão pequeno, alinhado à esquerda (mesma coluna) */
     .stButton button {
-        width: 120px;              /* botão menor */
+        width: 120px;
         height: 34px;
         font-size: 13px;
         font-weight: 600;
@@ -131,37 +147,17 @@ def tela_login():
         background: linear-gradient(90deg, #0a84ff, #35b8ff);
         border: none;
         border-radius: 10px;
-        transition: transform .15s ease, filter .15s ease;
+        box-shadow: none !important;      /* sem sombra */
+        text-shadow: none !important;     /* sem sombra no texto */
+        transition: filter .15s ease;
     }
-    .stButton button:hover {
-        transform: translateY(-1px);
-        filter: brightness(1.05);
-    }
+    .stButton button:hover { filter: brightness(1.05); }
 
-    /* === REMOVER A "FORMA" DO FORMULÁRIO E DO BOTÃO === */
-    div[data-testid="stForm"] {
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-        padding: 0 !important;
-    }
-    div[data-testid="stForm"] > div {
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-    }
-    div[data-testid="stForm"] .stButton,
-    div[data-testid="stForm"] .stButton > div {
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-    }
-
-    /* Esconde o rodapé/menu para login ficar limpo (opcional) */
+    /* Esconde menu/rodapé no login (opcional) */
     footer {visibility: hidden;}
     #MainMenu {visibility: hidden;}
 
-    /* Responsivo: em telas estreitas centraliza no meio */
+    /* Responsivo: centraliza no mobile */
     @media (max-width: 768px) {
         .login-container {
             left: 50%;
@@ -173,15 +169,22 @@ def tela_login():
     </style>
     """, unsafe_allow_html=True)
 
-    # Estrutura do login
+    # Estrutura da coluna de login
     st.markdown('<div class="login-container"><div class="login-box">', unsafe_allow_html=True)
     st.markdown('<div class="login-title">🔐 Login - Parceiros JWM</div>', unsafe_allow_html=True)
 
-    # Form compacto (sem “forma” ao redor)
+    # Form (sem blocos extras, inputs encostados à esquerda)
     with st.form("form_login", clear_on_submit=False):
-        usuario = st.text_input("Usuário")
-        senha = st.text_input("Senha", type="password")
-        col_btn, _ = st.columns([1, 3])
+        with st.container():  # só para agrupar com a classe de espaçamento
+            st.markdown('<div class="login-field">', unsafe_allow_html=True)
+            usuario = st.text_input("Usuário")
+            st.markdown('</div>', unsafe_allow_html=True)
+
+            st.markdown('<div class="login-field">', unsafe_allow_html=True)
+            senha = st.text_input("Senha", type="password")
+            st.markdown('</div>', unsafe_allow_html=True)
+
+        col_btn, _ = st.columns([1, 3])   # botão alinhado à esquerda
         entrar = col_btn.form_submit_button("Entrar")
 
     if entrar:
@@ -193,6 +196,7 @@ def tela_login():
             st.error("❌ Usuário ou senha inválidos")
 
     st.markdown('</div></div>', unsafe_allow_html=True)
+
 
 
 

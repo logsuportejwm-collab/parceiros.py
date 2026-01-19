@@ -59,15 +59,15 @@ def tela_login():
 
     st.markdown("""
     <style>
-    /* Remove espaço extra do Streamlit */
+    /* Remove espaçamento superior padrão */
     .block-container {
-        padding-top: 2rem;
-        padding-bottom: 0rem;
+        padding-top: 0rem !important;
+        padding-bottom: 0rem !important;
     }
 
-    /* Container geral do login */
-    .login-container {
-        height: calc(100vh - 2rem);
+    /* Força a página inteira */
+    .login-wrapper {
+        height: 100vh;
         display: flex;
         align-items: stretch;
     }
@@ -86,37 +86,38 @@ def tela_login():
 
     /* Botão azul */
     button[kind="primary"] {
+        background: #1f6feb !important;
         width: 100% !important;
         max-width: 420px !important;
         height: 46px !important;
-        background: linear-gradient(135deg,#1f6feb,#388bfd) !important;
         border-radius: 12px !important;
         font-weight: 600 !important;
     }
 
-    /* Coluna da imagem */
-    .img-wrapper {
-        height: 100%;
+    /* Coluna direita */
+    .img-container {
+        height: 100vh;
+        overflow: hidden;
         display: flex;
         align-items: center;
         justify-content: center;
     }
 
-    .img-wrapper img {
-        max-height: 100%;
+    .img-container img {
         width: 100%;
-        object-fit: contain;
-        border-radius: 16px;
+        height: 100%;
+        object-fit: cover;
     }
     </style>
     """, unsafe_allow_html=True)
 
-    st.markdown('<div class="login-container">', unsafe_allow_html=True)
+    st.markdown('<div class="login-wrapper">', unsafe_allow_html=True)
 
-    col_left, col_right = st.columns([45, 55])
+    col_left, col_right = st.columns([45, 55], gap="large")
 
     # ===== COLUNA ESQUERDA =====
     with col_left:
+        st.markdown("<div style='padding: 80px 40px;'>", unsafe_allow_html=True)
         st.title("🔐 Login")
         st.caption("Acesse com seu usuário e senha")
 
@@ -131,14 +132,14 @@ def tela_login():
             else:
                 st.error("❌ Usuário ou senha inválidos")
 
+        st.markdown("</div>", unsafe_allow_html=True)
+
     # ===== COLUNA DIREITA =====
     with col_right:
         if os.path.exists(IMAGEM_LADO):
-            st.markdown('<div class="img-wrapper">', unsafe_allow_html=True)
+            st.markdown('<div class="img-container">', unsafe_allow_html=True)
             st.image(IMAGEM_LADO)
             st.markdown('</div>', unsafe_allow_html=True)
-        else:
-            st.info("Imagem não encontrada")
 
     st.markdown('</div>', unsafe_allow_html=True)
 

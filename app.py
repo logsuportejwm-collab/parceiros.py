@@ -59,34 +59,57 @@ def tela_login():
 
     st.markdown("""
     <style>
-    /* remove espaçamento extra do topo */
+    /* Remove espaçamento superior padrão do Streamlit */
     .block-container {
-        padding-top: 1.5rem;
+        padding-top: 1rem !important;
     }
 
-    /* imagem compacta na coluna direita */
+    /* Inputs */
+    div[data-baseweb="input"] {
+        max-width: 420px;
+    }
+
+    input {
+        height: 46px !important;
+        font-size: 15px !important;
+        background: #1f242d !important;
+        border-radius: 10px !important;
+    }
+
+    /* Botão azul */
+    button[kind="primary"] {
+        background: #1f6feb !important;
+        width: 100% !important;
+        max-width: 420px !important;
+        height: 46px !important;
+        border-radius: 12px !important;
+        font-weight: 600 !important;
+    }
+
+    /* Coluna direita — imagem compacta e alinhada */
     .img-right {
         display: flex;
-        align-items: center;
-        justify-content: center;
+        align-items: center;      /* alinha verticalmente */
+        justify-content: center;  /* centraliza horizontalmente */
         height: 100%;
     }
 
     .img-right img {
-        max-height: 70vh;      /* NÃO força altura fixa */
+        max-height: 70vh;         /* nunca ultrapassa a tela */
         width: 100%;
-        object-fit: contain;   /* encaixa sem cortar */
+        object-fit: contain;      /* encaixa sem cortar */
         border-radius: 16px;
     }
     </style>
     """, unsafe_allow_html=True)
 
-    col_left, col_right = st.columns([45, 55])
+    col_left, col_right = st.columns([45, 55], gap="large")
 
-    # ===== COLUNA ESQUERDA =====
+    # ===== COLUNA ESQUERDA (LOGIN) =====
     with col_left:
         st.title("🔐 Login")
         st.caption("Acesse com seu usuário e senha")
+
         usuario = st.text_input("👤 Usuário")
         senha = st.text_input("🔑 Senha", type="password")
 
@@ -98,7 +121,7 @@ def tela_login():
             else:
                 st.error("❌ Usuário ou senha inválidos")
 
-    # ===== COLUNA DIREITA =====
+    # ===== COLUNA DIREITA (IMAGEM) =====
     with col_right:
         if os.path.exists(IMAGEM_LADO):
             st.markdown('<div class="img-right">', unsafe_allow_html=True)
@@ -107,14 +130,6 @@ def tela_login():
         else:
             st.info("Imagem não encontrada")
 
-    # ===== COLUNA DIREITA =====
-    with col_right:
-        if os.path.exists(IMAGEM_LADO):
-            st.markdown('<div class="img-container">', unsafe_allow_html=True)
-            st.image(IMAGEM_LADO)
-            st.markdown('</div>', unsafe_allow_html=True)
-
-    st.markdown('</div>', unsafe_allow_html=True)
 
 # =========================================================
 # BLOQUEIO SEM LOGIN

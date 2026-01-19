@@ -54,7 +54,6 @@ if "logado" not in st.session_state:
 # TELA LOGIN
 # =========================================================
 def tela_login():
-
     IMAGEM_LADO = os.path.join(PASTA_BASE, "Group22.png")
 
     st.markdown("""
@@ -63,48 +62,49 @@ def tela_login():
         width: 100% !important;
         max-width: 420px !important;
     }
-
     input {
-        height: 50px !important;
-        font-size: 16px !important;
-        padding: 12px 14px !important;
+        height: 46px !important;
+        font-size: 15px !important;
+        padding: 10px 14px !important;
         background: #1f242d !important;
-        border-radius: 12px !important;
+        border-radius: 10px !important;
         border: 1px solid #2d333b !important;
-        box-shadow: none !important;
     }
-
     button[kind="primary"] {
         width: 100% !important;
         max-width: 420px !important;
-        height: 48px !important;
-        margin-top: 14px;
+        height: 44px !important;
+        margin-top: 12px;
         background: linear-gradient(135deg,#1f6feb,#388bfd) !important;
-        border-radius: 14px !important;
+        border-radius: 12px !important;
         font-weight: 600 !important;
-        box-shadow: none !important;
     }
     </style>
     """, unsafe_allow_html=True)
 
     col_left, col_right = st.columns([55, 45])
 
-    # ========= COLUNA ESQUERDA (LOGIN) =========
+    # 🔹 ESQUERDA – LOGIN
     with col_left:
         st.title("🔐 Login")
         st.caption("Acesse com seu usuário e senha")
+        usuario = st.text_input("Usuário")
+        senha = st.text_input("Senha", type="password")
 
-        usuario = st.text_input("👤 Usuário")
-        senha = st.text_input("🔑 Senha", type="password")
-        entrar = st.button("🚀 Entrar", type="primary")
-
-        if entrar:
+        if st.button("Entrar", type="primary"):
             if autenticar(usuario, senha):
                 st.session_state.logado = True
                 st.session_state.usuario = usuario
                 st.rerun()
             else:
                 st.error("❌ Usuário ou senha inválidos")
+
+    with col_right:
+        if os.path.exists(IMAGEM_LADO):
+            st.image(IMAGEM_LADO, use_container_width=True)
+        else:
+            st.info("Imagem Group22.png não encontrada")
+
 
     # ========= COLUNA DIREITA (IMAGEM) =========
     with col_right:

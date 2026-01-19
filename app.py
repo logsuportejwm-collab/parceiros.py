@@ -55,13 +55,13 @@ if "logado" not in st.session_state:
 # =========================================================
 
 def tela_login():
-    IMAGEM_LADO = os.path.join(PASTA_BASE, "Group22.png")
+    IMAGEM_LADO = os.path.join(PASTA_BASE, "Group 22.png")
 
     st.markdown("""
     <style>
     div[data-baseweb="input"] {
         width: 100% !important;
-        max-width: 380px !important;
+        max-width: 360px !important;
     }
     input {
         height: 44px !important;
@@ -73,7 +73,7 @@ def tela_login():
     }
     button[kind="primary"] {
         width: 100% !important;
-        max-width: 380px !important;
+        max-width: 360px !important;
         height: 44px !important;
         margin-top: 12px;
         background: linear-gradient(135deg,#1f6feb,#388bfd) !important;
@@ -83,9 +83,9 @@ def tela_login():
     </style>
     """, unsafe_allow_html=True)
 
-    col_left, col_right = st.columns([55, 45])
+    col_left, col_right = st.columns([45, 55])
 
-    # ===== COLUNA ESQUERDA (LOGIN) =====
+    # -------- LOGIN (ESQUERDA) --------
     with col_left:
         st.title("🔐 Login")
         st.caption("Acesse com seu usuário e senha")
@@ -101,12 +101,13 @@ def tela_login():
             else:
                 st.error("❌ Usuário ou senha inválidos")
 
-    # ===== COLUNA DIREITA (IMAGEM) =====
+    # -------- IMAGEM (DIREITA) --------
     with col_right:
         if os.path.exists(IMAGEM_LADO):
             st.image(IMAGEM_LADO, use_container_width=True)
         else:
-            st.info("Imagem Group22.png não encontrada")
+            st.info("Imagem Group 22.png não encontrada")
+
 
 
 # =========================================================

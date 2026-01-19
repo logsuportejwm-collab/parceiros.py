@@ -54,38 +54,49 @@ if "logado" not in st.session_state:
 # TELA LOGIN
 # =========================================================
 
+
 def tela_login():
     IMAGEM_LADO = os.path.join(PASTA_BASE, "Group 22.png")
 
     st.markdown("""
     <style>
+    /* Remove margens extras */
+    .block-container {
+        padding-top: 2rem;
+    }
+
+    /* Inputs */
     div[data-baseweb="input"] {
-        width: 100% !important;
-        max-width: 360px !important;
+        max-width: 420px;
     }
     input {
-        height: 44px !important;
+        height: 46px !important;
         font-size: 15px !important;
-        padding: 10px 12px !important;
         background: #1f242d !important;
         border-radius: 10px !important;
-        border: 1px solid #2d333b !important;
     }
+
+    /* Botão */
     button[kind="primary"] {
         width: 100% !important;
-        max-width: 360px !important;
-        height: 44px !important;
-        margin-top: 12px;
-        background: linear-gradient(135deg,#1f6feb,#388bfd) !important;
+        max-width: 420px !important;
+        height: 46px !important;
         border-radius: 12px !important;
         font-weight: 600 !important;
+    }
+
+    /* Imagem direita ocupa tela toda */
+    .img-right img {
+        height: 90vh;
+        object-fit: cover;
+        border-radius: 16px;
     }
     </style>
     """, unsafe_allow_html=True)
 
     col_left, col_right = st.columns([45, 55])
 
-    # -------- LOGIN (ESQUERDA) --------
+    # ===== COLUNA ESQUERDA (LOGIN) =====
     with col_left:
         st.title("🔐 Login")
         st.caption("Acesse com seu usuário e senha")
@@ -101,14 +112,14 @@ def tela_login():
             else:
                 st.error("❌ Usuário ou senha inválidos")
 
-    # -------- IMAGEM (DIREITA) --------
+    # ===== COLUNA DIREITA (IMAGEM) =====
     with col_right:
         if os.path.exists(IMAGEM_LADO):
+            st.markdown('<div class="img-right">', unsafe_allow_html=True)
             st.image(IMAGEM_LADO, use_container_width=True)
+            st.markdown('</div>', unsafe_allow_html=True)
         else:
             st.info("Imagem Group 22.png não encontrada")
-
-
 
 # =========================================================
 # BLOQUEIO SEM LOGIN

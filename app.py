@@ -59,23 +59,45 @@ def tela_login():
 
     st.markdown("""
     <style>
-    /* remove espaçamento extra do topo */
+    /* Container geral */
     .block-container {
         padding-top: 1.5rem;
     }
 
-    /* imagem compacta na coluna direita */
-    .img-right {
+    /* Inputs */
+    div[data-baseweb="input"] {
+        max-width: 420px;
+    }
+
+    input {
+        height: 46px !important;
+        font-size: 15px !important;
+        background: #1f242d !important;
+        border-radius: 10px !important;
+    }
+
+    /* Botão azul */
+    button[kind="primary"] {
+        width: 100% !important;
+        max-width: 420px !important;
+        height: 46px !important;
+        border-radius: 12px !important;
+        font-weight: 600 !important;
+        background: linear-gradient(135deg,#1f6feb,#388bfd) !important;
+    }
+
+    /* Coluna direita SEM scroll */
+    .img-wrapper {
+        height: calc(100vh - 120px);
         display: flex;
         align-items: center;
         justify-content: center;
-        height: 100%;
     }
 
-    .img-right img {
-        max-height: 70vh;      /* NÃO força altura fixa */
+    .img-wrapper img {
+        max-height: 100%;
         width: 100%;
-        object-fit: contain;   /* encaixa sem cortar */
+        object-fit: contain;
         border-radius: 16px;
     }
     </style>
@@ -87,6 +109,7 @@ def tela_login():
     with col_left:
         st.title("🔐 Login")
         st.caption("Acesse com seu usuário e senha")
+
         usuario = st.text_input("👤 Usuário")
         senha = st.text_input("🔑 Senha", type="password")
 
@@ -101,14 +124,11 @@ def tela_login():
     # ===== COLUNA DIREITA =====
     with col_right:
         if os.path.exists(IMAGEM_LADO):
-            st.markdown('<div class="img-right">', unsafe_allow_html=True)
-            st.image(IMAGEM_LADO, use_container_width=True)
+            st.markdown('<div class="img-wrapper">', unsafe_allow_html=True)
+            st.image(IMAGEM_LADO)
             st.markdown('</div>', unsafe_allow_html=True)
         else:
             st.info("Imagem não encontrada")
-
-
-
 
 # =========================================================
 # BLOQUEIO SEM LOGIN

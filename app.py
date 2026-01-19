@@ -54,29 +54,28 @@ if "logado" not in st.session_state:
 # TELA LOGIN
 # =========================================================
 
-
 def tela_login():
     IMAGEM_LADO = os.path.join(PASTA_BASE, "Group 22.png")
 
     st.markdown("""
     <style>
-    /* Remove scroll da página */
-    html, body, [class*="css"] {
-        height: 100%;
-        overflow: hidden;
+    /* remove scroll vertical na tela de login */
+    section.main > div {
+        padding-top: 2rem;
+        height: 100vh;
     }
 
-    /* Remove padding padrão do Streamlit */
-    .block-container {
-        padding-top: 1.5rem;
-        padding-bottom: 0;
+    /* colunas com mesma altura */
+    .login-container {
+        display: flex;
+        height: calc(100vh - 2rem);
+        align-items: center;
     }
 
-    /* Inputs */
+    /* inputs */
     div[data-baseweb="input"] {
         max-width: 420px;
     }
-
     input {
         height: 46px !important;
         font-size: 15px !important;
@@ -84,7 +83,6 @@ def tela_login():
         border-radius: 10px !important;
     }
 
-    /* Botão */
     button[kind="primary"] {
         width: 100% !important;
         max-width: 420px !important;
@@ -93,16 +91,10 @@ def tela_login():
         font-weight: 600 !important;
     }
 
-    /* Container da imagem direita */
-    .img-right {
-        height: calc(100vh - 40px);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
+    /* imagem direita */
     .img-right img {
         height: 100%;
+        max-height: calc(100vh - 4rem);
         width: 100%;
         object-fit: cover;
         border-radius: 18px;
@@ -110,9 +102,10 @@ def tela_login():
     </style>
     """, unsafe_allow_html=True)
 
-    col_left, col_right = st.columns([45, 55], gap="large")
+    st.markdown('<div class="login-container">', unsafe_allow_html=True)
+    col_left, col_right = st.columns([45, 55])
 
-    # ===== COLUNA ESQUERDA (LOGIN) =====
+    # ===== COLUNA ESQUERDA =====
     with col_left:
         st.title("🔐 Login")
         st.caption("Acesse com seu usuário e senha")
@@ -128,14 +121,16 @@ def tela_login():
             else:
                 st.error("❌ Usuário ou senha inválidos")
 
-    # ===== COLUNA DIREITA (IMAGEM) =====
+    # ===== COLUNA DIREITA =====
     with col_right:
         if os.path.exists(IMAGEM_LADO):
             st.markdown('<div class="img-right">', unsafe_allow_html=True)
-            st.image(IMAGEM_LADO)
+            st.image(IMAGEM_LADO, use_container_width=True)
             st.markdown('</div>', unsafe_allow_html=True)
         else:
-            st.warning("Imagem 'Group 22.png' não encontrada")
+            st.info("Imagem Group 22.png não encontrada")
+
+    st.markdown('</div>', unsafe_allow_html=True)
 
 
 # =========================================================

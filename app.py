@@ -59,9 +59,23 @@ def tela_login():
 
     st.markdown("""
     <style>
-    /* Remove espaçamento superior padrão do Streamlit */
+    /* Mantém layout no topo sem quebrar */
     .block-container {
-        padding-top: 1rem !important;
+        padding-top: 1rem;
+    }
+
+    /* Wrapper do login */
+    .login-left {
+        padding-top: 24px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    /* Ajuste fino do título para não cortar emoji */
+    .login-left h1 {
+        line-height: 1.3;
+        margin-top: 0;
+        padding-top: 0;
     }
 
     /* Inputs */
@@ -86,27 +100,29 @@ def tela_login():
         font-weight: 600 !important;
     }
 
-    /* Coluna direita — imagem compacta e alinhada */
+    /* Coluna direita - imagem compacta e alinhada */
     .img-right {
         display: flex;
-        align-items: center;      /* alinha verticalmente */
-        justify-content: center;  /* centraliza horizontalmente */
+        align-items: center;
+        justify-content: center;
         height: 100%;
     }
 
     .img-right img {
-        max-height: 70vh;         /* nunca ultrapassa a tela */
+        max-height: 70vh;
         width: 100%;
-        object-fit: contain;      /* encaixa sem cortar */
+        object-fit: contain;
         border-radius: 16px;
     }
     </style>
     """, unsafe_allow_html=True)
 
-    col_left, col_right = st.columns([45, 55], gap="large")
+    col_left, col_right = st.columns([45, 55])
 
-    # ===== COLUNA ESQUERDA (LOGIN) =====
+    # ===== COLUNA ESQUERDA =====
     with col_left:
+        st.markdown('<div class="login-left">', unsafe_allow_html=True)
+
         st.title("🔐 Login")
         st.caption("Acesse com seu usuário e senha")
 
@@ -121,14 +137,14 @@ def tela_login():
             else:
                 st.error("❌ Usuário ou senha inválidos")
 
-    # ===== COLUNA DIREITA (IMAGEM) =====
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    # ===== COLUNA DIREITA =====
     with col_right:
         if os.path.exists(IMAGEM_LADO):
             st.markdown('<div class="img-right">', unsafe_allow_html=True)
             st.image(IMAGEM_LADO, use_container_width=True)
             st.markdown('</div>', unsafe_allow_html=True)
-        else:
-            st.info("Imagem não encontrada")
 
 
 # =========================================================

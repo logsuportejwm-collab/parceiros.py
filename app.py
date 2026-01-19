@@ -59,16 +59,16 @@ def tela_login():
 
     st.markdown("""
     <style>
-    /* Container geral */
+    /* Remove scroll extra da página */
     .block-container {
         padding-top: 1.5rem;
+        padding-bottom: 0;
     }
 
     /* Inputs */
     div[data-baseweb="input"] {
         max-width: 420px;
     }
-
     input {
         height: 46px !important;
         font-size: 15px !important;
@@ -81,22 +81,23 @@ def tela_login():
         width: 100% !important;
         max-width: 420px !important;
         height: 46px !important;
+        background: linear-gradient(135deg,#1f6feb,#388bfd) !important;
         border-radius: 12px !important;
         font-weight: 600 !important;
-        background: linear-gradient(135deg,#1f6feb,#388bfd) !important;
     }
 
-    /* Coluna direita SEM scroll */
+    /* Coluna direita ocupa a altura da tela */
     .img-wrapper {
-        height: calc(100vh - 120px);
+        height: 100vh;
         display: flex;
         align-items: center;
         justify-content: center;
     }
 
+    /* Imagem compacta e ajustada */
     .img-wrapper img {
         max-height: 100%;
-        width: 100%;
+        max-width: 100%;
         object-fit: contain;
         border-radius: 16px;
     }
@@ -129,6 +130,7 @@ def tela_login():
             st.markdown('</div>', unsafe_allow_html=True)
         else:
             st.info("Imagem não encontrada")
+
 
 # =========================================================
 # BLOQUEIO SEM LOGIN

@@ -59,13 +59,13 @@ def tela_login():
 
     st.markdown("""
     <style>
-    /* Remove espaçamento superior padrão */
+    /* Remove qualquer margem extra do Streamlit */
     .block-container {
-        padding-top: 0rem !important;
-        padding-bottom: 0rem !important;
+        padding: 0 !important;
+        margin: 0 !important;
     }
 
-    /* Força a página inteira */
+    /* Wrapper ocupa a tela inteira */
     .login-wrapper {
         height: 100vh;
         display: flex;
@@ -94,13 +94,10 @@ def tela_login():
         font-weight: 600 !important;
     }
 
-    /* Coluna direita */
+    /* Coluna direita com imagem */
     .img-container {
         height: 100vh;
         overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
     }
 
     .img-container img {
@@ -117,7 +114,11 @@ def tela_login():
 
     # ===== COLUNA ESQUERDA =====
     with col_left:
-        st.markdown("<div style='padding: 80px 40px;'>", unsafe_allow_html=True)
+        st.markdown(
+            "<div style='padding: 80px 40px; height: 100%;'>",
+            unsafe_allow_html=True
+        )
+
         st.title("🔐 Login")
         st.caption("Acesse com seu usuário e senha")
 
@@ -144,6 +145,14 @@ def tela_login():
     st.markdown('</div>', unsafe_allow_html=True)
 
 
+    # ===== COLUNA DIREITA =====
+    with col_right:
+        if os.path.exists(IMAGEM_LADO):
+            st.markdown('<div class="img-container">', unsafe_allow_html=True)
+            st.image(IMAGEM_LADO)
+            st.markdown('</div>', unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # =========================================================
 # BLOQUEIO SEM LOGIN

@@ -129,7 +129,7 @@ def tela_login():
         usuario = st.text_input("👤 Usuário")
         senha = st.text_input("🔑 Senha", type="password")
 
-        if st.button("🚀 Entrar", type="primary"):
+        if st.button(" Entrar", type="primary"):
             if autenticar(usuario, senha):
                 st.session_state.logado = True
                 st.session_state.usuario = usuario

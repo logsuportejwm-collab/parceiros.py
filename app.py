@@ -59,23 +59,33 @@ def tela_login():
 
     st.markdown("""
     <style>
-    /* remove scroll vertical na tela de login */
-    section.main > div {
-        padding-top: 2rem;
+    /* Remove scroll da página */
+    html, body, [class*="css"]  {
+        height: 100%;
+        overflow: hidden;
+    }
+
+    /* Container principal ocupa a tela toda */
+    .block-container {
+        padding-top: 1.5rem;
+        padding-bottom: 0rem;
         height: 100vh;
     }
 
-    /* colunas com mesma altura */
-    .login-container {
+    /* Centraliza verticalmente a coluna esquerda */
+    .login-box {
         display: flex;
-        height: calc(100vh - 2rem);
-        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+        height: 100vh;
+        max-width: 420px;
     }
 
-    /* inputs */
+    /* Inputs */
     div[data-baseweb="input"] {
         max-width: 420px;
     }
+
     input {
         height: 46px !important;
         font-size: 15px !important;
@@ -83,6 +93,7 @@ def tela_login():
         border-radius: 10px !important;
     }
 
+    /* Botão */
     button[kind="primary"] {
         width: 100% !important;
         max-width: 420px !important;
@@ -91,22 +102,29 @@ def tela_login():
         font-weight: 600 !important;
     }
 
-    /* imagem direita */
-    .img-right img {
+    /* Coluna direita ocupa a tela inteira */
+    .img-container {
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .img-container img {
         height: 100%;
-        max-height: calc(100vh - 4rem);
         width: 100%;
         object-fit: cover;
-        border-radius: 18px;
+        border-radius: 16px;
     }
     </style>
     """, unsafe_allow_html=True)
 
-    st.markdown('<div class="login-container">', unsafe_allow_html=True)
-    col_left, col_right = st.columns([45, 55])
+    col_left, col_right = st.columns([40, 60])
 
-    # ===== COLUNA ESQUERDA =====
+    # ===== COLUNA ESQUERDA (LOGIN) =====
     with col_left:
+        st.markdown('<div class="login-box">', unsafe_allow_html=True)
+
         st.title("🔐 Login")
         st.caption("Acesse com seu usuário e senha")
 
@@ -121,16 +139,16 @@ def tela_login():
             else:
                 st.error("❌ Usuário ou senha inválidos")
 
-    # ===== COLUNA DIREITA =====
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    # ===== COLUNA DIREITA (IMAGEM) =====
     with col_right:
         if os.path.exists(IMAGEM_LADO):
-            st.markdown('<div class="img-right">', unsafe_allow_html=True)
-            st.image(IMAGEM_LADO, use_container_width=True)
+            st.markdown('<div class="img-container">', unsafe_allow_html=True)
+            st.image(IMAGEM_LADO)
             st.markdown('</div>', unsafe_allow_html=True)
         else:
             st.info("Imagem Group 22.png não encontrada")
-
-    st.markdown('</div>', unsafe_allow_html=True)
 
 
 # =========================================================

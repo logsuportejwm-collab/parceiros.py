@@ -59,32 +59,12 @@ def tela_login():
 
     st.markdown("""
     <style>
-    /* Container principal sem empurrar a tela */
+    /* remove espaçamento extra do topo */
     .block-container {
-        padding-top: 2rem;
+        padding-top: 1.5rem;
     }
 
-    /* Inputs */
-    div[data-baseweb="input"] {
-        max-width: 420px;
-    }
-
-    input {
-        height: 46px !important;
-        font-size: 15px !important;
-        background: #1f242d !important;
-        border-radius: 10px !important;
-    }
-
-    button[kind="primary"] {
-        width: 100% !important;
-        max-width: 420px !important;
-        height: 46px !important;
-        border-radius: 12px !important;
-        font-weight: 600 !important;
-    }
-
-    /* Imagem compacta e alinhada */
+    /* imagem compacta na coluna direita */
     .img-right {
         display: flex;
         align-items: center;
@@ -93,9 +73,9 @@ def tela_login():
     }
 
     .img-right img {
-        max-height: 420px;   /* 🔹 controla a altura */
+        max-height: 70vh;      /* NÃO força altura fixa */
         width: 100%;
-        object-fit: contain; /* 🔹 não corta e não estoura */
+        object-fit: contain;   /* encaixa sem cortar */
         border-radius: 16px;
     }
     </style>
@@ -125,7 +105,8 @@ def tela_login():
             st.image(IMAGEM_LADO, use_container_width=True)
             st.markdown('</div>', unsafe_allow_html=True)
         else:
-            st.info("Imagem Group 22.png não encontrada")
+            st.info("Imagem não encontrada")
+
 
 
 

@@ -60,15 +60,23 @@ def tela_login():
 
     st.markdown("""
     <style>
-    /* Remove margens extras */
+    /* Remove scroll da página */
+    html, body, [class*="css"] {
+        height: 100%;
+        overflow: hidden;
+    }
+
+    /* Remove padding padrão do Streamlit */
     .block-container {
-        padding-top: 2rem;
+        padding-top: 1.5rem;
+        padding-bottom: 0;
     }
 
     /* Inputs */
     div[data-baseweb="input"] {
         max-width: 420px;
     }
+
     input {
         height: 46px !important;
         font-size: 15px !important;
@@ -85,16 +93,24 @@ def tela_login():
         font-weight: 600 !important;
     }
 
-    /* Imagem direita ocupa tela toda */
+    /* Container da imagem direita */
+    .img-right {
+        height: calc(100vh - 40px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
     .img-right img {
-        height: 90vh;
+        height: 100%;
+        width: 100%;
         object-fit: cover;
-        border-radius: 16px;
+        border-radius: 18px;
     }
     </style>
     """, unsafe_allow_html=True)
 
-    col_left, col_right = st.columns([45, 55])
+    col_left, col_right = st.columns([45, 55], gap="large")
 
     # ===== COLUNA ESQUERDA (LOGIN) =====
     with col_left:
@@ -116,10 +132,11 @@ def tela_login():
     with col_right:
         if os.path.exists(IMAGEM_LADO):
             st.markdown('<div class="img-right">', unsafe_allow_html=True)
-            st.image(IMAGEM_LADO, use_container_width=True)
+            st.image(IMAGEM_LADO)
             st.markdown('</div>', unsafe_allow_html=True)
         else:
-            st.info("Imagem Group 22.png não encontrada")
+            st.warning("Imagem 'Group 22.png' não encontrada")
+
 
 # =========================================================
 # BLOQUEIO SEM LOGIN

@@ -59,16 +59,24 @@ def tela_login():
 
     st.markdown("""
     <style>
-    /* Remove scroll extra da página */
+    /* Remove espaço extra do Streamlit */
     .block-container {
-        padding-top: 1.5rem;
-        padding-bottom: 0;
+        padding-top: 2rem;
+        padding-bottom: 0rem;
+    }
+
+    /* Container geral do login */
+    .login-container {
+        height: calc(100vh - 2rem);
+        display: flex;
+        align-items: stretch;
     }
 
     /* Inputs */
     div[data-baseweb="input"] {
         max-width: 420px;
     }
+
     input {
         height: 46px !important;
         font-size: 15px !important;
@@ -86,23 +94,24 @@ def tela_login():
         font-weight: 600 !important;
     }
 
-    /* Coluna direita ocupa a altura da tela */
+    /* Coluna da imagem */
     .img-wrapper {
-        height: 100vh;
+        height: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
     }
 
-    /* Imagem compacta e ajustada */
     .img-wrapper img {
         max-height: 100%;
-        max-width: 100%;
+        width: 100%;
         object-fit: contain;
         border-radius: 16px;
     }
     </style>
     """, unsafe_allow_html=True)
+
+    st.markdown('<div class="login-container">', unsafe_allow_html=True)
 
     col_left, col_right = st.columns([45, 55])
 
@@ -130,6 +139,9 @@ def tela_login():
             st.markdown('</div>', unsafe_allow_html=True)
         else:
             st.info("Imagem não encontrada")
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
 
 
 # =========================================================

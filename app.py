@@ -160,7 +160,7 @@ if not st.session_state.logado:
 st.markdown("""
 <style>
 .stApp {
-    background: linear-gradient(to right,#000000, #09203f, #517fa4);
+    background: linear-gradient(to right,#000000, #000000, #051121, #0E2646, #2E5173, #9AB6D1);
     background-attachment: fixed;
 }
 </style>

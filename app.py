@@ -169,20 +169,16 @@ st.markdown("""
 # =========================================================
 # CABEÇALHO
 # =========================================================
-colA, colB = st.columns([2, 1])
+if os.path.exists(os.path.join(PASTA_BASE, "topo_JWMNovo.png")):
+    st.image(
+        os.path.join(PASTA_BASE, "topo_JWMNovo.png"),
+        use_container_width=True
+    )
 
-with colA:
-    if os.path.exists(os.path.join(PASTA_BASE, "topo_JWMNovo.jpg")):
-        st.image(os.path.join(PASTA_BASE, "topo_JWMNovo.jpg"), use_container_width=True)
-    st.title("Gestão de Parceiros 🚛💼🌎")
-    st.write("Motoristas Terceiros")
-
-with colB:
-    if os.path.exists(os.path.join(PASTA_BASE, "mapinha.png")):
-        st.image(os.path.join(PASTA_BASE, "mapinha.png"), use_container_width=True)
+st.title("Gestão de Parceiros 🚛💼🌎")
+st.write("Motoristas Terceiros")
 
 st.markdown("---")
-
 # =========================================================
 # FUNÇÕES AUXILIARES
 # =========================================================

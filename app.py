@@ -232,6 +232,9 @@ df_base = carregar_df()
 # =========================================================
 # FILTROS
 # =========================================================
+# =========================================================
+# FILTROS (INTERDEPENDENTES)
+# =========================================================
 filtros = [
     ("PLACA", "Placa"),
     ("INDICACAO", "Indicação"),
@@ -245,6 +248,7 @@ filtros = [
     ("USUARIO", "Usuário")
 ]
 
+# Inicializa estado dos filtros
 for col, _ in filtros:
     st.session_state.setdefault(f"f_{col}", [])
 
@@ -252,7 +256,7 @@ def clear_all_filters():
     for col, _ in filtros:
         st.session_state[f"f_{col}"] = []
 
-def filtrar(df):
+def aplicar_filtros_progressivos(df):
     temp = df.copy()
     for col, _ in filtros:
         valores = st.session_state.get(f"f_{col}")
@@ -261,16 +265,30 @@ def filtrar(df):
     return temp
 
 # =========================================================
-# SIDEBAR
+# SIDEBAR – FILTROS CASCATA
 # =========================================================
+
 with st.sidebar:
     st.title("🎛️ Filtros")
 
     colA, colB = st.columns(2)
+
+    df_temp = df_base.copy()
+
     for i, (col, label) in enumerate(filtros):
-        opcoes = sorted([v for v in df_base[col].unique() if v])
+        # opções baseadas nos filtros já aplicados
+        opcoes = sorted([v for v in df_temp[col].unique() if v])
+
         with (colA if i % 2 == 0 else colB):
-            st.multiselect(label, opcoes, key=f"f_{col}")
+            selecionados = st.multiselect(
+                label,
+                opcoes,
+                key=f"f_{col}"
+            )
+
+        # aplica filtro imediatamente para os próximos
+        if selecionados:
+            df_temp = df_temp[df_temp[col].isin(selecionados)]
 
     st.markdown("---")
     st.button("🧹 LIMPAR TODOS OS FILTROS", on_click=clear_all_filters)

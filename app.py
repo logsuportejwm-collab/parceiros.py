@@ -377,14 +377,11 @@ with st.form("cadastro"):
     col1, col2 = st.columns(2)
 
     salvar = col1.form_submit_button("💾 SALVAR")
+
     col2.form_submit_button(
         "🧹 LIMPAR CAMPOS",
         on_click=limpar_formulario
     )
-
-if limpar:
-    limpar_formulario()
-    st.rerun()
 
 if salvar:
     try:

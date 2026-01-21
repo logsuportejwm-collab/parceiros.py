@@ -267,17 +267,19 @@ def aplicar_filtros_progressivos(df):
 # =========================================================
 # SIDEBAR – FILTROS CASCATA
 # =========================================================
-
 with st.sidebar:
     st.title("🎛️ Filtros")
 
+    df_filtrado_sidebar = df_base.copy()
+
     colA, colB = st.columns(2)
 
-    df_temp = df_base.copy()
-
     for i, (col, label) in enumerate(filtros):
-        # opções baseadas nos filtros já aplicados
-        opcoes = sorted([v for v in df_temp[col].unique() if v])
+
+        # opções baseadas no dataframe já filtrado
+        opcoes = sorted(
+            [v for v in df_filtrado_sidebar[col].unique() if v]
+        )
 
         with (colA if i % 2 == 0 else colB):
             selecionados = st.multiselect(
@@ -286,9 +288,11 @@ with st.sidebar:
                 key=f"f_{col}"
             )
 
-        # aplica filtro imediatamente para os próximos
+        # aplica o filtro imediatamente para os próximos
         if selecionados:
-            df_temp = df_temp[df_temp[col].isin(selecionados)]
+            df_filtrado_sidebar = df_filtrado_sidebar[
+                df_filtrado_sidebar[col].isin(selecionados)
+            ]
 
     st.markdown("---")
     st.button("🧹 LIMPAR TODOS OS FILTROS", on_click=clear_all_filters)

@@ -302,10 +302,13 @@ with st.sidebar:
     """)
 
 # =========================================================
-# TABELA
+# TABELA (USANDO FILTROS EM CASCATA)
 # =========================================================
 st.subheader("📋 Dados Filtrados")
-st.dataframe(filtrar(df_base), use_container_width=True)
+
+df_resultado = aplicar_filtros_progressivos(df_base)
+
+st.dataframe(df_resultado, use_container_width=True)
 
 # =========================================================
 # FUNÇÃO LIMPAR FORMULÁRIO

@@ -385,8 +385,26 @@ with st.form("cadastro"):
 
 if salvar:
     try:
+        # 🔹 Captura valores do formulário
+        placa = st.session_state.get("placa")
+        marca = st.session_state.get("marca")
+        modelo = st.session_state.get("modelo")
+        tipo = st.session_state.get("tipo")
+        ano = st.session_state.get("ano")
+        motorista = st.session_state.get("motorista")
+        telefone = st.session_state.get("telefone")
+        cidade = st.session_state.get("cidade")
+        estado = st.session_state.get("estado")
+        rastreador = st.session_state.get("rastreador")
+        curso = st.session_state.get("curso")
+        data = st.session_state.get("data")
+        indicacao = st.session_state.get("indicacao")
+        tags = st.session_state.get("tags")
+        usuario = st.session_state.get("usuario")
+
         conn = get_connection()
         cursor = conn.cursor()
+
         cursor.execute("""
             INSERT INTO parceiros_jwm
             (placa, marca, modelo, ano, tipo_veiculo, motorista,
@@ -394,16 +412,28 @@ if salvar:
              curso_mop, data_cadastro, indicacao, tags, usuario)
             VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
         """, (
-            norm(placa), norm(marca), norm(modelo), norm(ano),
-            norm(tipo), norm(motorista), norm(telefone),
-            norm(cidade), norm(estado), norm(rastreador),
-            norm(curso), norm(data), norm(indicacao),
-            norm(tags), norm(usuario)
+            norm(placa),
+            norm(marca),
+            norm(modelo),
+            norm(ano),
+            norm(tipo),
+            norm(motorista),
+            norm(telefone),
+            norm(cidade),
+            norm(estado),
+            norm(rastreador),
+            norm(curso),
+            norm(data),
+            norm(indicacao),
+            norm(tags),
+            norm(usuario)
         ))
+
         conn.commit()
         cursor.close()
         conn.close()
-        st.success("✔ Registro salvo com sucesso!")
+
+        st.success("✔ Motorista cadastrado com sucesso!")
         st.cache_data.clear()
         st.rerun()
 

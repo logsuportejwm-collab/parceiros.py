@@ -342,7 +342,7 @@ def limpar_formulario():
 # =========================================================
 # CADASTRO MANUAL
 # =========================================================
-st.markdown("## 📝 Cadastro Manual")
+st.markdown("## 📝 Painel de Cadastro")
 st.write("Cadastre sem Pontuações e com letra Maiúscula")
 
 with st.form("cadastro"):

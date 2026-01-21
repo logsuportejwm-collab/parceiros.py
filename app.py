@@ -351,7 +351,7 @@ with st.form("cadastro"):
         st.text_input("Placa", key="placa")
         st.text_input("Marca", key="marca")
         st.text_input("Modelo", key="modelo")
-        st.text_input("Tipo de Veículo", key="tipo")
+        st.selectbox("Tipo de Veículo", ["Fiorino", "Van Utilitário", "HR Baú", "HR Aberto", "Veículo 3/4 Aberto", "Veículo 3/4 Baú", "Toco Aberto", "Toco Baú", "VUC Baú", "Truck Aberto", "Truck Baú", "Bi-Truck Aberto", "Bi-Truck Baú", "Carreta Sider", "Carreta Wanderleia", "Carreta Wanderleia Aberta", "Carreta Wanderleia Sider", "Carreta Rodo Trem", "Bitruck Sider", "Carreta Grade Baixa", "Wanderleia Carga Seca", ], key="tipo")
 
     with c2:
         st.text_input("Ano", key="ano")

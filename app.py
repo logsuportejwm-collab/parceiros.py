@@ -320,16 +320,20 @@ st.dataframe(df_resultado, use_container_width=True)
 # FUNÇÃO LIMPAR FORMULÁRIO
 # =========================================================
 def limpar_formulario():
-    for k in [
+    campos_texto = [
         "placa","marca","modelo","tipo","ano","motorista",
         "telefone","cidade","estado","data","usuario"
-    ]:
-        st.session_state[k] = ""
-    st.session_state.update({
-        "curso": "SIM",
-        "indicacao": "SIM",
-        "rastreador": "SIM",
-        "tags": "CONECT CAR"
+    ]
+
+    for k in campos_texto:
+        if k in st.session_state:
+            st.session_state[k] = ""
+
+    st.session_state["curso"] = "SIM"
+    st.session_state["indicacao"] = "SIM"
+    st.session_state["rastreador"] = "SIM"
+    st.session_state["tags"] = "CONECT CAR"
+
     })
 
 # =========================================================
@@ -341,35 +345,39 @@ with st.form("cadastro"):
     c1, c2, c3, c4 = st.columns(4)
 
     with c1:
-        placa = st.text_input("Placa", key="placa")
-        marca = st.text_input("Marca", key="marca")
-        modelo = st.text_input("Modelo", key="modelo")
-        tipo = st.text_input("Tipo de Veículo", key="tipo")
+        st.text_input("Placa", key="placa")
+        st.text_input("Marca", key="marca")
+        st.text_input("Modelo", key="modelo")
+        st.text_input("Tipo de Veículo", key="tipo")
 
     with c2:
-        ano = st.text_input("Ano", key="ano")
-        motorista = st.text_input("Motorista", key="motorista")
-        curso = st.selectbox("Curso MOP", ["SIM","NAO"], key="curso")
-        indicacao = st.selectbox("Indicação", ["SIM","NAO"], key="indicacao")
+        st.text_input("Ano", key="ano")
+        st.text_input("Motorista", key="motorista")
+        st.selectbox("Curso MOP", ["SIM","NAO"], key="curso")
+        st.selectbox("Indicação", ["SIM","NAO"], key="indicacao")
 
     with c3:
-        telefone = st.text_input("Telefone", key="telefone")
-        cidade = st.text_input("Cidade", key="cidade")
-        estado = st.text_input("Estado", key="estado")
-        rastreador = st.selectbox("Rastreador", ["SIM","NAO"], key="rastreador")
+        st.text_input("Telefone", key="telefone")
+        st.text_input("Cidade", key="cidade")
+        st.text_input("Estado", key="estado")
+        st.selectbox("Rastreador", ["SIM","NAO"], key="rastreador")
 
     with c4:
-        data = st.text_input("Data do cadastro", key="data")
-        tags = st.selectbox(
+        st.text_input("Data do cadastro", key="data")
+        st.selectbox(
             "Tags",
             ["CONECT CAR","SEM PARAR","VELOE","MOVE MAIS"],
             key="tags"
         )
-        usuario = st.text_input("Usuário", key="usuario")
+        st.text_input("Usuário", key="usuario")
 
     col1, col2 = st.columns(2)
+
     salvar = col1.form_submit_button("💾 SALVAR")
-    limpar = col2.form_submit_button("🧹 LIMPAR CAMPOS")
+    col2.form_submit_button(
+        "🧹 LIMPAR CAMPOS",
+        on_click=limpar_formulario
+    )
 
 if limpar:
     limpar_formulario()

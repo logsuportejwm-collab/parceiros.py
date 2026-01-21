@@ -176,7 +176,7 @@ if os.path.exists(os.path.join(PASTA_BASE, "topo_JWMNovo.png")):
     )
 
 st.title("Gestão de Parceiros 🚛💼🌎")
-st.write("Motoristas Terceiros")
+st.write("Motoristas Terceiros / Agregado")
 
 st.markdown("---")
 # =========================================================

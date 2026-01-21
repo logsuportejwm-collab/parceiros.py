@@ -230,9 +230,6 @@ def carregar_df():
 df_base = carregar_df()
 
 # =========================================================
-# FILTROS
-# =========================================================
-# =========================================================
 # FILTROS (INTERDEPENDENTES)
 # =========================================================
 filtros = [
@@ -265,21 +262,16 @@ def aplicar_filtros_progressivos(df):
     return temp
 
 # =========================================================
-# SIDEBAR – FILTROS CASCATA
+# SIDEBAR – FILTROS EM CASCATA (SINCRONIZADOS)
 # =========================================================
 with st.sidebar:
     st.title("🎛️ Filtros")
 
-    df_filtrado_sidebar = df_base.copy()
-
+    df_filtrado = df_base.copy()
     colA, colB = st.columns(2)
 
     for i, (col, label) in enumerate(filtros):
-
-        # opções baseadas no dataframe já filtrado
-        opcoes = sorted(
-            [v for v in df_filtrado_sidebar[col].unique() if v]
-        )
+        opcoes = sorted([v for v in df_filtrado[col].unique() if v])
 
         with (colA if i % 2 == 0 else colB):
             selecionados = st.multiselect(
@@ -288,14 +280,12 @@ with st.sidebar:
                 key=f"f_{col}"
             )
 
-        # aplica o filtro imediatamente para os próximos
         if selecionados:
-            df_filtrado_sidebar = df_filtrado_sidebar[
-                df_filtrado_sidebar[col].isin(selecionados)
-            ]
+            df_filtrado = df_filtrado[df_filtrado[col].isin(selecionados)]
 
     st.markdown("---")
     st.button("🧹 LIMPAR TODOS OS FILTROS", on_click=clear_all_filters)
+
 
     with st.expander("📘 IST (Instrução de Trabalho)"):
         if os.path.exists(os.path.join(PASTA_BASE, "QR Code.png")):

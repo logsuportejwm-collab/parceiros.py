@@ -320,21 +320,24 @@ st.dataframe(df_resultado, use_container_width=True)
 # FUNÇÃO LIMPAR FORMULÁRIO
 # =========================================================
 def limpar_formulario():
-    campos_texto = [
-        "placa","marca","modelo","tipo","ano","motorista",
-        "telefone","cidade","estado","data","usuario"
+    chaves_texto = [
+        "placa", "marca", "modelo", "tipo", "ano", "motorista",
+        "telefone", "cidade", "estado", "data", "usuario"
     ]
 
-    for k in campos_texto:
+    for k in chaves_texto:
         if k in st.session_state:
             st.session_state[k] = ""
 
-    st.session_state["curso"] = "SIM"
-    st.session_state["indicacao"] = "SIM"
-    st.session_state["rastreador"] = "SIM"
-    st.session_state["tags"] = "CONECT CAR"
-
-    })
+    # Selectbox / valores padrão
+    if "curso" in st.session_state:
+        st.session_state["curso"] = "SIM"
+    if "indicacao" in st.session_state:
+        st.session_state["indicacao"] = "SIM"
+    if "rastreador" in st.session_state:
+        st.session_state["rastreador"] = "SIM"
+    if "tags" in st.session_state:
+        st.session_state["tags"] = "CONECT CAR"
 
 # =========================================================
 # CADASTRO MANUAL

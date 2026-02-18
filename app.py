@@ -386,22 +386,7 @@ with st.form("cadastro"):
 
 if salvar:
     try:
-        # 🔹 Captura valores do formulário
-        placa = st.session_state.get("placa")
-        marca = st.session_state.get("marca")
-        modelo = st.session_state.get("modelo")
-        tipo = st.session_state.get("tipo")
-        ano = st.session_state.get("ano")
-        motorista = st.session_state.get("motorista")
-        telefone = st.session_state.get("telefone")
-        cidade = st.session_state.get("cidade")
-        estado = st.session_state.get("estado")
-        rastreador = st.session_state.get("rastreador")
-        curso = st.session_state.get("curso")
-        data = st.session_state.get("data")
-        indicacao = st.session_state.get("indicacao")
-        tags = st.session_state.get("tags")
-        usuario = st.session_state.get("usuario")
+        placa = norm(st.session_state.get("placa"))
 
         conn = get_connection()
         cursor = conn.cursor()
@@ -413,21 +398,21 @@ if salvar:
              curso_mop, data_cadastro, indicacao, tags, usuario)
             VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
         """, (
-            norm(placa),
-            norm(marca),
-            norm(modelo),
-            norm(ano),
-            norm(tipo),
-            norm(motorista),
-            norm(telefone),
-            norm(cidade),
-            norm(estado),
-            norm(rastreador),
-            norm(curso),
-            norm(data),
-            norm(indicacao),
-            norm(tags),
-            norm(usuario)
+            placa,
+            norm(st.session_state.get("marca")),
+            norm(st.session_state.get("modelo")),
+            norm(st.session_state.get("ano")),
+            norm(st.session_state.get("tipo")),
+            norm(st.session_state.get("motorista")),
+            norm(st.session_state.get("telefone")),
+            norm(st.session_state.get("cidade")),
+            norm(st.session_state.get("estado")),
+            norm(st.session_state.get("rastreador")),
+            norm(st.session_state.get("curso")),
+            norm(st.session_state.get("data")),
+            norm(st.session_state.get("indicacao")),
+            norm(st.session_state.get("tags")),
+            norm(st.session_state.get("usuario"))
         ))
 
         conn.commit()
@@ -437,6 +422,9 @@ if salvar:
         st.success("✔ Motorista cadastrado com sucesso!")
         st.cache_data.clear()
         st.rerun()
+
+    except mysql.connector.errors.IntegrityError:
+        st.error("❌ ESTA PLACA JÁ ESTÁ CADASTRADA!")
 
     except Exception as e:
         st.error(f"❌ Erro ao salvar: {e}")

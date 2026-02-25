@@ -23,7 +23,10 @@ def get_connection():
         user=st.secrets["mysql"]["user"],
         password=st.secrets["mysql"]["password"],
         database=st.secrets["mysql"]["database"],
-        port=st.secrets["mysql"]["port"]
+        port=st.secrets["mysql"]["port"],
+
+        connection_timeout=5, 
+        autocommit=True
     )
 
 # =========================================================

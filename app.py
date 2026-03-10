@@ -306,7 +306,7 @@ with st.sidebar:
     st.markdown("""
     - 🌐 **Site JWM** → [Acessar](https://jwmlogistica.com.br)
     - 🗺️ **Google Maps** → [Abrir](https://www.google.com/maps)
-    - 📊 **Power BI** → [Dashboard](https://app.powerbi.com/groups/me/reports/9a9af043-bf97-42b5-b32c-f98be1e2d37a/f30a62d7315710e85461?language=pt-BR&experience=power-bi)
+    - 📊 **Power BI** → [Dashboard](https://app.powerbi.com/links/MSe9_-szX0?ctid=c8335dcc-510d-4853-a36f-b12b7f4be009&pbi_source=linkShare)
     - 📦🚚 **Dimensionamento Veículo** → [App](https://dimensionamento-de-ve-culos---jwm-dvxn4ufxfmnmyanmv3ohte.streamlit.app/)
     """)
 
